@@ -31,20 +31,20 @@ public class Drivetrain extends SubsystemBase {
     rightSlave.follow(rightMaster);
   }
 
-  public void drive(double left, double right){
+  public void drive(double left, double right) {
     leftMaster.set(ControlMode.Current, left);
     rightMaster.set(ControlMode.Current, right);
   }
 
-  public void setLeftSide(double value){
+  public void setLeftSide(double value) {
     leftMaster.set(ControlMode.Current, value);
   }
 
-  public void setRightSide(double value){
+  public void setRightSide(double value) {
     rightMaster.set(ControlMode.Current, value);
   }
-  
-  public void stop(){
+
+  public void stop() {
     rightMaster.set(ControlMode.Current, 0);
     leftMaster.set(ControlMode.Current, 0);
   }
