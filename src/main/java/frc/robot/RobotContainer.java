@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Joystick lJoystick = new Joystick(Constants.JoySticks.leftStick);
-  private final Joystick rJoystick = new Joystick(Constants.JoySticks.rightStick);
+  private final Joystick lJoystick = new Joystick(Constants.JoySticks.LEFT);
+  private final Joystick rJoystick = new Joystick(Constants.JoySticks.RIGHT);
 
   private final Drivetrain drivetrain = new Drivetrain();
 

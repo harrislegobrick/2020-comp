@@ -24,10 +24,10 @@ public class Drivetrain extends SubsystemBase {
    * Creates a new Drivetrain.
    */
   public Drivetrain() {
-    leftMaster = new TalonSRX(Constants.Drive.leftMaster);
-    leftSlave = new VictorSPX(Constants.Drive.leftSlave);
-    rightMaster = new TalonSRX(Constants.Drive.rightMaster);
-    rightSlave = new VictorSPX(Constants.Drive.rightSlave);
+    leftMaster = new TalonSRX(Constants.Drive.LEFT_MASTER);
+    leftSlave = new VictorSPX(Constants.Drive.LEFT_SLAVE);
+    rightMaster = new TalonSRX(Constants.Drive.RIGHT_MASTER);
+    rightSlave = new VictorSPX(Constants.Drive.RIGHT_SLAVE);
 
     gyro = new ADXRS450_Gyro();
 
