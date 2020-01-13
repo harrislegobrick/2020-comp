@@ -25,11 +25,15 @@ public class Turret extends SubsystemBase {
 
     motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
-    // will need to do PID assignments here 
+    // will need to do PID assignments here
   }
 
   public void set(ControlMode mode, double setpoint) {
     motor.set(mode, setpoint);
+  }
+
+  public void stop() {
+    motor.set(ControlMode.PercentOutput, 0);
   }
 
   @Override
