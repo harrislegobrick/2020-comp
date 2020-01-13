@@ -57,7 +57,7 @@ public class RobotContainer {
     new POVButton(rJoystick, 90).whenActive(new MoveTurret(Direction.CW, turret));
     // this should do the same thing as ^ but it's inlined
     new POVButton(rJoystick, 270).whenActive(new FunctionalCommand(() -> {
-    }, () -> turret.setPercentOutput(-0.3), i -> turret.stop(), () -> false, this.turret));
+    }, () -> turret.setPercentOutput(-0.3), i -> turret.stop(), () -> false, turret));
 
   }
 
