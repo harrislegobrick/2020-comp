@@ -54,9 +54,9 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new POVButton(rJoystick, 90).whenActive(new MoveTurret(Direction.CW, turret));
+    new POVButton(rJoystick, 90).whileActiveOnce(new MoveTurret(Direction.CW, turret));
     // this should do the same thing as ^ but it's inlined
-    new POVButton(rJoystick, 270).whenActive(new FunctionalCommand(() -> {
+    new POVButton(rJoystick, 270).whileActiveOnce(new FunctionalCommand(() -> {
     }, () -> turret.setPercentOutput(-0.3), i -> turret.stop(), () -> false, turret));
 
   }
