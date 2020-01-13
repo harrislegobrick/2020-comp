@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -17,6 +15,7 @@ import frc.robot.commands.*;
 import frc.robot.commands.MoveTurret.Direction;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -41,12 +40,9 @@ public class RobotContainer {
    */
   public RobotContainer() {
     drivetrain.setDefaultCommand(new TankDrive(() -> lJoystick.getY() * 12, () -> rJoystick.getY() * 12, drivetrain));
-    turret.setDefaultCommand(new PIDCommand(
-      new PIDController(Constants.Turret.kP, Constants.Turret.kI, Constants.Turret.kD),
-      limelight::getX,
-      0,
-      output -> turret.set(ControlMode.Current, output),
-      turret));
+    turret.setDefaultCommand(
+        new PIDCommand(new PIDController(Constants.Turret.kP, Constants.Turret.kI, Constants.Turret.kD),
+            limelight::getX, 0, output -> turret.setCurrent(output), turret));
 
     configureButtonBindings();
   }
@@ -59,7 +55,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new POVButton(rJoystick, 90).whenActive(new MoveTurret(Direction.CW, turret));
-    new POVButton(rJoystick, 270).whenActive(new MoveTurret(Direction.CCW, turret));
+    // this should do the same thing as ^ but it's inlined
+    new POVButton(rJoystick, 270).whenActive(new FunctionalCommand(null, () -> turret.setPercentOutput(-0.3), i -> {
+      turret.stop();
+    }, () -> false, this.turret));
+
   }
 
   /**
