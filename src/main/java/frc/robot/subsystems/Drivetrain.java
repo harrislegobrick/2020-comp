@@ -11,12 +11,14 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
-  private static TalonSRX leftMaster, rightMaster;
-  private static VictorSPX leftSlave, rightSlave;
+  private final TalonSRX leftMaster, rightMaster;
+  private final VictorSPX leftSlave, rightSlave;
+  private final ADXRS450_Gyro gyro;
 
   /**
    * Creates a new Drivetrain.
@@ -27,8 +29,11 @@ public class Drivetrain extends SubsystemBase {
     rightMaster = new TalonSRX(Constants.Drive.rightMaster);
     rightSlave = new VictorSPX(Constants.Drive.rightSlave);
 
+    gyro = new ADXRS450_Gyro();
+
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
+    gyro.calibrate();
   }
 
   public void drive(double left, double right) {
@@ -47,6 +52,10 @@ public class Drivetrain extends SubsystemBase {
   public void stop() {
     rightMaster.set(ControlMode.Current, 0);
     leftMaster.set(ControlMode.Current, 0);
+  }
+
+  public double getAngle() {
+    return gyro.getAngle();
   }
 
   @Override
