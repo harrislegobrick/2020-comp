@@ -7,12 +7,18 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.commands.*;
+import frc.robot.commands.MoveTurret.Direction;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,12 +33,20 @@ public class RobotContainer {
   private final Joystick rJoystick = new Joystick(Constants.JoySticks.RIGHT);
 
   private final Drivetrain drivetrain = new Drivetrain();
+  private final Limelight limelight = new Limelight();
+  private final Turret turret = new Turret();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     drivetrain.setDefaultCommand(new TankDrive(() -> lJoystick.getY() * 12, () -> rJoystick.getY() * 12, drivetrain));
+    turret.setDefaultCommand(new PIDCommand(
+      new PIDController(Constants.Turret.kP, Constants.Turret.kI, Constants.Turret.kD),
+      limelight::getX,
+      0,
+      output -> turret.set(ControlMode.Current, output),
+      turret));
 
     configureButtonBindings();
   }
@@ -44,7 +58,8 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    new POVButton(rJoystick, 90).whenActive(new MoveTurret(Direction.CW, turret));
+    new POVButton(rJoystick, 270).whenActive(new MoveTurret(Direction.CCW, turret));
   }
 
   /**
