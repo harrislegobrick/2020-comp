@@ -28,13 +28,12 @@ public class Flywheel extends SubsystemBase {
     motor.setIdleMode(IdleMode.kBrake);
     motor.setInverted(Constants.Flywheel.INVERTED);
 
+    pController.setFeedbackDevice(motor.getEncoder());
     pController.setP(Constants.Flywheel.kP);
     pController.setI(Constants.Flywheel.kI);
     pController.setD(Constants.Flywheel.kD);
     pController.setFF(Constants.Flywheel.kFF);
     pController.setIZone(Constants.Flywheel.kIZone);
-
-    pController.setFeedbackDevice(motor.getEncoder());
   }
 
   public void setVelocity(double value) {
