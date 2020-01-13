@@ -28,15 +28,13 @@ public class RobotContainer {
 
   private final Drivetrain drivetrain = new Drivetrain();
 
-  private final TankDrive tankDrive;
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
+    drivetrain.setDefaultCommand(new TankDrive(() -> lJoystick.getY() * 12, () -> rJoystick.getY() * 12, drivetrain));
+
     configureButtonBindings();
-    tankDrive = new TankDrive(drivetrain, lJoystick, rJoystick);
   }
 
   /**
