@@ -28,8 +28,12 @@ public class Turret extends SubsystemBase {
     // will need to do PID assignments here
   }
 
-  public void set(ControlMode mode, double setpoint) {
-    motor.set(mode, setpoint);
+  public void setCurrent(double value) {
+    motor.set(ControlMode.Current, value);
+  }
+
+  public void setPercentOutput(double value){
+    motor.set(ControlMode.PercentOutput, value);
   }
 
   public void stop() {
