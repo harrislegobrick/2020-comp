@@ -61,8 +61,12 @@ public class Limelight extends SubsystemBase {
     return pos;
   }
 
-  public boolean getAvalibility() {
+  public boolean targetLock() {
     return table.getEntry("tv").getDouble(0.0) == 1;
+  }
+
+  public boolean detected() {
+    return table.getEntry("tl").getDouble(-1) > 0;
   }
 
   @Override
