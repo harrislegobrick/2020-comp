@@ -7,8 +7,6 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Turret;
 
@@ -40,10 +38,10 @@ public class MoveTurret extends CommandBase {
   public void execute() {
     switch (direction) {
     case CW:
-      turret.set(ControlMode.PercentOutput, 0.2);
+      turret.setPercentOutput(0.2);
       break;
     case CCW:
-      turret.set(ControlMode.PercentOutput, -0.2);
+      turret.setPercentOutput(-0.2);
       break;
     }
   }
