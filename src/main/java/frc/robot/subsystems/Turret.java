@@ -8,12 +8,14 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Turret extends SubsystemBase {
-  private final TalonSRX motor = new TalonSRX(5);
+  private final TalonSRX motor = new TalonSRX(Constants.Turret.MOTOR);
 
   /**
    * Creates a new Turret.
@@ -21,10 +23,13 @@ public class Turret extends SubsystemBase {
   public Turret() {
     motor.configFactoryDefault();
 
+    motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+
+    // will need to do PID assignments here 
   }
 
-  public void set(double setpoint) {
-    motor.set(ControlMode.MotionMagic, setpoint);
+  public void set(ControlMode mode, double setpoint) {
+    motor.set(mode, setpoint);
   }
 
   @Override
