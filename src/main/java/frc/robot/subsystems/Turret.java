@@ -15,12 +15,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Turret extends SubsystemBase {
-  private final TalonSRX motor = new TalonSRX(Constants.Turret.MOTOR);
+  private final TalonSRX motor;
 
   /**
    * Creates a new Turret.
    */
   public Turret() {
+    motor = new TalonSRX(Constants.Turret.MOTOR);
+
     motor.configFactoryDefault();
     motor.setInverted(Constants.Turret.INVERTED);
 

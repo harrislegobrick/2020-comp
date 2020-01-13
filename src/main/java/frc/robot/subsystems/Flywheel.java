@@ -17,13 +17,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Flywheel extends SubsystemBase {
-  private final CANSparkMax motor = new CANSparkMax(Constants.Flywheel.MOTOR, MotorType.kBrushless);
-  private final CANPIDController pController = motor.getPIDController();
+  private final CANSparkMax motor;
+  private final CANPIDController pController;
 
   /**
    * Creates a new Flywheel.
    */
   public Flywheel() {
+    motor = new CANSparkMax(Constants.Flywheel.MOTOR, MotorType.kBrushless);
+    pController = motor.getPIDController();
+
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
     motor.setInverted(Constants.Flywheel.INVERTED);
