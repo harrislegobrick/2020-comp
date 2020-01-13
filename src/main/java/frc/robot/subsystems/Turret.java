@@ -22,6 +22,7 @@ public class Turret extends SubsystemBase {
    */
   public Turret() {
     motor.configFactoryDefault();
+    motor.setInverted(Constants.Turret.INVERTED);
 
     motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
@@ -32,7 +33,7 @@ public class Turret extends SubsystemBase {
     motor.set(ControlMode.Current, value);
   }
 
-  public void setPercentOutput(double value){
+  public void setPercentOutput(double value) {
     motor.set(ControlMode.PercentOutput, value);
   }
 

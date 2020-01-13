@@ -38,6 +38,7 @@ public final class Constants {
 
     public final class Turret {
         public static final int MOTOR = 5;
+        public static final boolean INVERTED = false;
         // WILL NEED TUNING
         public static final double kP = 0.1;
         public static final double kI = 0.002;
@@ -46,11 +47,12 @@ public final class Constants {
 
     public final class Flywheel {
         public static final int MOTOR = 6;
-		public static final boolean INVERTED = false;
-		public static final double kP = 0;
-		public static final double kI = 0;
-		public static final double kD = 0;
-		public static final double kFF = 0;
-		public static final double kIZone = 0;
+        public static final boolean INVERTED = false;
+        // WILL NEED TUNING
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kFF = 0;
+        public static final double kIZone = 0;
     }
 }
