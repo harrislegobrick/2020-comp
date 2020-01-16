@@ -65,7 +65,6 @@ public class RobotContainer {
 
     new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
-
   }
 
   /**
