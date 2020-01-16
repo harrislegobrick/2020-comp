@@ -14,6 +14,7 @@ import frc.robot.Constants;
 
 public class Limelight extends SubsystemBase {
   private static NetworkTable table;
+  private boolean tracking = false;
 
   /**
    * Creates a new Limelight.
@@ -29,14 +30,23 @@ public class Limelight extends SubsystemBase {
     return d;
   }
 
+  public void toggleTracking() {
+    if (tracking)
+      setDriving();
+    else
+      setTracking();
+  }
+
   public void setTracking() {
     table.getEntry("ledMode").setNumber(3.0);
     table.getEntry("camMode").setNumber(0.0);
+    tracking = true;
   }
 
   public void setDriving() {
     table.getEntry("ledMode").setNumber(1.0);
     table.getEntry("camMode").setNumber(1.0);
+    tracking = false;
   }
 
   public double getX() {
