@@ -39,7 +39,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    drivetrain.setDefaultCommand(new TankDrive(lJoy::getY, rJoy::getY, drivetrain));
+    drivetrain.setDefaultCommand(new TankDrive(lJoy::getY, rJoy::getY, rJoy::getThrottle, drivetrain));
     turret.setDefaultCommand(
         new PIDCommand(new PIDController(Constants.Turret.kP, Constants.Turret.kI, Constants.Turret.kD),
             limelight::getX, 0, output -> turret.setCurrent(output), turret));
