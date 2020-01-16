@@ -28,12 +28,17 @@ public final class Constants {
     public final class JoySticks {
         public static final int LEFT = 0;
         public static final int RIGHT = 1;
+
+        public static final int POV_UP = 0;
+        public static final int POV_RIGHT = 90;
+        public static final int POV_DOWN = 180;
+        public static final int POV_LEFT = 270;
     }
 
     public final class Limelight {
         public static final double a1 = 0; // mounting angle
         public static final double h1 = 2; // height of your camera above the floor (in feet)
-        public static final double h2 = 6.9375; // height of the target (in feet)
+        public static final double h2 = 6.77083; // height of the target (in feet)
     }
 
     public final class Turret {

@@ -28,8 +28,8 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Joystick lJoystick = new Joystick(Constants.JoySticks.LEFT);
-  private final Joystick rJoystick = new Joystick(Constants.JoySticks.RIGHT);
+  private final Joystick lJoy = new Joystick(Constants.JoySticks.LEFT);
+  private final Joystick rJoy = new Joystick(Constants.JoySticks.RIGHT);
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Limelight limelight = new Limelight();
@@ -39,7 +39,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    drivetrain.setDefaultCommand(new TankDrive(() -> lJoystick.getY() * 12, () -> rJoystick.getY() * 12, drivetrain));
+    drivetrain.setDefaultCommand(new TankDrive(lJoy::getY, rJoy::getY, drivetrain));
     turret.setDefaultCommand(
         new PIDCommand(new PIDController(Constants.Turret.kP, Constants.Turret.kI, Constants.Turret.kD),
             limelight::getX, 0, output -> turret.setCurrent(output), turret));
@@ -54,10 +54,17 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new POVButton(rJoystick, 90).whileActiveOnce(new MoveTurret(Direction.CW, turret));
-    // this should do the same thing as ^ but it's inlined
-    new POVButton(rJoystick, 270).whileActiveOnce(new FunctionalCommand(() -> {
-    }, () -> turret.setPercentOutput(-0.3), i -> turret.stop(), () -> false, turret));
+    new POVButton(rJoy, Constants.JoySticks.POV_RIGHT).whileActiveOnce(new MoveTurret(Direction.CW, turret));
+    // V should do the same thing as ^ but it's inlined
+    new POVButton(rJoy, Constants.JoySticks.POV_LEFT).whileActiveOnce(new FunctionalCommand(() -> {
+    }, () -> turret.setPercentOutput(-0.3), i -> turret.stop(), () -> false, turret)); // shorter notation?
+    // new POVButton(rJoystick,
+    // Constants.JoySticks.POV_LEFT).whileActiveContinuous(() ->
+    // turret.setPercentOutput(-0.3), turret).whenInactive(turret::stop, turret); //
+    // could be shorter notation idk
+
+    new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
+    new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
   }
 
