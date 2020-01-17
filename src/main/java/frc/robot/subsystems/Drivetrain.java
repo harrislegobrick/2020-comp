@@ -31,6 +31,12 @@ public class Drivetrain extends SubsystemBase {
 
     gyro = new ADXRS450_Gyro();
 
+    leftMaster.configFactoryDefault();
+    leftSlave.configFactoryDefault();
+    rightMaster.configFactoryDefault();
+    rightSlave.configFactoryDefault();
+
+
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
     gyro.calibrate();
@@ -38,7 +44,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void drive(double left, double right) {
     leftMaster.set(ControlMode.Current, left);
-    rightMaster.set(ControlMode.Current, right);
+    rightMaster.set(ControlMode.Current, -right);
   }
 
   public void setLeftSide(double value) {
