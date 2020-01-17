@@ -17,7 +17,10 @@ public class DeployIntake extends CommandBase {
 
   /**
    * Creates a new DeployIntake.
-   * can use new .withTimeout(seconds) decorator to retract after seconds desired
+   * <p>
+   * can use {@link Command#withTimeout(double)} decorator to retract after
+   * seconds desired
+   * </p>
    */
   public DeployIntake(Intake intake, Pneumatics pneumatics) {
     // Use addRequirements() here to declare subsystem dependencies.
