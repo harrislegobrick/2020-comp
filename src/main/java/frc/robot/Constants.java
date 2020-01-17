@@ -60,4 +60,14 @@ public final class Constants {
         public static final double kFF = 0;
         public static final double kIZone = 0;
     }
+
+    public final class Intake {
+        public static final int MOTOR = 6;
+        public static final boolean INVERTED = false;
+    }
+
+    public final class Pneumatics {
+        public static final int INTAKE_FORWARD = 0;
+        public static final int INTAKE_REVERSE = 1;
+    }
 }
