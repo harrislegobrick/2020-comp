@@ -17,6 +17,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
@@ -34,6 +35,8 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final Limelight limelight = new Limelight();
   private final Turret turret = new Turret();
+  private final Intake intake = new Intake();
+  private final Pneumatics pneumatics = new Pneumatics();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -65,6 +68,8 @@ public class RobotContainer {
 
     new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
+
+    new JoystickButton(lJoy, 1).whileActiveOnce(new DeployIntake(intake, pneumatics));
   }
 
   /**
