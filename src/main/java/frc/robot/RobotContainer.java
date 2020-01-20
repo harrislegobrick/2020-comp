@@ -57,9 +57,9 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new POVButton(rJoy, Constants.JoySticks.POV_RIGHT).whileActiveOnce(new MoveTurret(Direction.CW, turret));
+    new POVButton(rJoy, Constants.JoySticks.POV_RIGHT).whenHeld(new MoveTurret(Direction.CW, turret));
     // V should do the same thing as ^ but it's inlined
-    new POVButton(rJoy, Constants.JoySticks.POV_LEFT).whileActiveOnce(new FunctionalCommand(() -> {
+    new POVButton(rJoy, Constants.JoySticks.POV_LEFT).whenHeld(new FunctionalCommand(() -> {
     }, () -> turret.setPercentOutput(-0.3), i -> turret.stop(), () -> false, turret)); // shorter notation?
     // new POVButton(rJoystick,
     // Constants.JoySticks.POV_LEFT).whileActiveContinuous(() ->
@@ -69,7 +69,7 @@ public class RobotContainer {
     new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
-    new JoystickButton(lJoy, 1).whileActiveOnce(new DeployIntake(intake, pneumatics));
+    new JoystickButton(lJoy, 1).whenHeld(new DeployIntake(intake, pneumatics));
   }
 
   /**
