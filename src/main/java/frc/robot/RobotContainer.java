@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -37,6 +39,10 @@ public class RobotContainer {
   private final Turret turret = new Turret();
   private final Intake intake = new Intake();
   private final Pneumatics pneumatics = new Pneumatics();
+  private final Flywheel flywheel = new Flywheel();
+
+  private final AutonSelectorCommand autonOne = new AutonSelectorCommand(drivetrain, flywheel, intake, limelight,
+      pneumatics);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -69,16 +75,17 @@ public class RobotContainer {
     new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
-    new JoystickButton(lJoy, 1).whenHeld(new DeployIntake(intake, pneumatics));
+    new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, pneumatics));
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
+   * @throws IOException
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() throws IOException {
     // An ExampleCommand will run in autonomous
-    return null;
+    return autonOne.getTestCommand();
   }
 }
