@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -18,14 +20,39 @@ package frc.robot;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public final class Drive {
+    public static final class Drive {
+        public static final int GEAR_RATIO = 10;
+        public static final int WHEEL_SIZE_INCH = 6;
+        public static final double TICKS_TO_METERS = (1.0 / 4096) * GEAR_RATIO * (WHEEL_SIZE_INCH * Math.PI / 1)
+                / 39.37;
+        public static final double TRACK_WIDTH_METERS = 0.69;
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(
+                TRACK_WIDTH_METERS);
+
+        public static final int LIL_TIMEOUT = 10;
+        public static final int BIG_TIMEOUT = 50;
+
         public static final int LEFT_MASTER = 0;
         public static final int LEFT_SLAVE = 1;
         public static final int RIGHT_MASTER = 2;
         public static final int RIGHT_SLAVE = 3;
+
+        public static final boolean kGyroReversed = true;
+        public static final boolean SENSOR_PHASE = false;
+        public static final boolean INVERTED = false;
+        public static final int PID_SLOT = 0;
+
+        // will need characterization to find values
+        public static final double S_VOLTS = 0;
+        public static final double V_VOLTS_SECOND_PER_METER = 0;
+        public static final double A_VOLT_SEONDS_SQUARED_PER_METER = 0;
+
+        public static final double MAX_SPEED_METERS_PER_SECOND = 0;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0;
+        public static final double P_DRIVE_VEL = 0;
     }
 
-    public final class JoySticks {
+    public static final class JoySticks {
         public static final int LEFT = 0;
         public static final int RIGHT = 1;
 
@@ -35,13 +62,13 @@ public final class Constants {
         public static final int POV_LEFT = 270;
     }
 
-    public final class Limelight {
+    public static final class Limelight {
         public static final double a1 = 0; // mounting angle
         public static final double h1 = 2; // height of your camera above the floor (in feet)
         public static final double h2 = 6.77083; // height of the target (in feet)
     }
 
-    public final class Turret {
+    public static final class Turret {
         public static final int MOTOR = 5;
         public static final boolean INVERTED = false;
         // WILL NEED TUNING
@@ -50,7 +77,7 @@ public final class Constants {
         public static final double kD = 0;
     }
 
-    public final class Flywheel {
+    public static final class Flywheel {
         public static final int MOTOR = 6;
         public static final boolean INVERTED = false;
         // WILL NEED TUNING
@@ -61,12 +88,12 @@ public final class Constants {
         public static final double kIZone = 0;
     }
 
-    public final class Intake {
+    public static final class Intake {
         public static final int MOTOR = 6;
         public static final boolean INVERTED = false;
     }
 
-    public final class Pneumatics {
+    public static final class Pneumatics {
         public static final int INTAKE_FORWARD = 0;
         public static final int INTAKE_REVERSE = 1;
     }
