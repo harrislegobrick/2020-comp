@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pneumatics;
 
-public class DeployIntake extends CommandBase {
+public class DeployIntakeCommand extends CommandBase {
   private Intake intake;
   private Pneumatics pneumatics;
 
@@ -22,7 +22,7 @@ public class DeployIntake extends CommandBase {
    * seconds desired
    * </p>
    */
-  public DeployIntake(Intake intake, Pneumatics pneumatics) {
+  public DeployIntakeCommand(Intake intake, Pneumatics pneumatics) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
     this.pneumatics = pneumatics;
