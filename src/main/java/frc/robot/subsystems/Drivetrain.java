@@ -8,64 +8,108 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.Drive;
 
 public class Drivetrain extends SubsystemBase {
-  private final TalonSRX leftMaster, rightMaster;
+  private final WPI_TalonSRX leftMaster, rightMaster;
   private final VictorSPX leftSlave, rightSlave;
-  private final ADXRS450_Gyro gyro;
+  private final DifferentialDriveOdometry odometry;
+  private final AHRS gyro;
 
   /**
    * Creates a new Drivetrain.
    */
   public Drivetrain() {
-    leftMaster = new TalonSRX(Constants.Drive.LEFT_MASTER);
-    leftSlave = new VictorSPX(Constants.Drive.LEFT_SLAVE);
-    rightMaster = new TalonSRX(Constants.Drive.RIGHT_MASTER);
-    rightSlave = new VictorSPX(Constants.Drive.RIGHT_SLAVE);
+    leftMaster = new WPI_TalonSRX(Drive.LEFT_MASTER);
+    leftSlave = new VictorSPX(Drive.LEFT_SLAVE);
+    rightMaster = new WPI_TalonSRX(Drive.RIGHT_MASTER);
+    rightSlave = new VictorSPX(Drive.RIGHT_SLAVE);
 
-    gyro = new ADXRS450_Gyro();
+    gyro = new AHRS();
 
-    leftMaster.configFactoryDefault();
-    leftSlave.configFactoryDefault();
-    rightMaster.configFactoryDefault();
-    rightSlave.configFactoryDefault();
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
+    // reset talons
+    leftMaster.configFactoryDefault(Drive.LIL_TIMEOUT);
+    leftSlave.configFactoryDefault(Drive.LIL_TIMEOUT);
+    rightMaster.configFactoryDefault(Drive.LIL_TIMEOUT);
+    rightSlave.configFactoryDefault(Drive.LIL_TIMEOUT);
 
+    // slaves follow the masters
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
-    gyro.calibrate();
+
+    // invert the motors so that positive is forward
+    leftMaster.setInverted(Drive.INVERTED);
+    rightMaster.setInverted(!Drive.INVERTED);
+    leftSlave.setInverted(InvertType.OpposeMaster);
+    rightSlave.setInverted(InvertType.OpposeMaster);
+
+    // encoder setup
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Drive.PID_SLOT, Drive.LIL_TIMEOUT);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Drive.PID_SLOT,
+        Drive.LIL_TIMEOUT);
+    leftMaster.setSensorPhase(Drive.SENSOR_PHASE);
+    rightMaster.setSensorPhase(!Drive.SENSOR_PHASE);
+
+    // zero encoders
+    leftMaster.setSelectedSensorPosition(0);
+    rightMaster.setSelectedSensorPosition(0);
+  }
+
+  /**
+   * Returns the current wheel speeds of the robot.
+   *
+   * @return The current wheel speeds.
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorPosition() * Drive.TICKS_TO_METERS,
+        rightMaster.getSelectedSensorPosition() * Drive.TICKS_TO_METERS);
   }
 
   public void drive(double left, double right) {
     leftMaster.set(ControlMode.Current, left);
-    rightMaster.set(ControlMode.Current, -right);
+    rightMaster.set(ControlMode.Current, right);
   }
 
-  public void setLeftSide(double value) {
-    leftMaster.set(ControlMode.Current, value);
-  }
-
-  public void setRightSide(double value) {
-    rightMaster.set(ControlMode.Current, value);
+  public void driveVolts(double leftVolts, double rightVolts) {
+    leftMaster.setVoltage(leftVolts);
+    rightMaster.setVoltage(-rightVolts);
   }
 
   public void stop() {
-    rightMaster.set(ControlMode.Current, 0);
-    leftMaster.set(ControlMode.Current, 0);
+    rightMaster.set(ControlMode.PercentOutput, 0);
+    leftMaster.set(ControlMode.PercentOutput, 0);
   }
 
-  public double getAngle() {
-    return gyro.getAngle();
+  /**
+   * Returns the heading of the robot.
+   *
+   * @return the robot's heading in degrees, from 180 to 180
+   */
+  public double getHeading() {
+    return Math.IEEEremainder(gyro.getAngle(), 360) * (Drive.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    odometry.update(Rotation2d.fromDegrees(getHeading()),
+        leftMaster.getSelectedSensorPosition() * Drive.TICKS_TO_METERS,
+        rightMaster.getSelectedSensorPosition() * Drive.TICKS_TO_METERS);
   }
 }
