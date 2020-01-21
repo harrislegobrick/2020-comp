@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
     public static final class Drive {
-        public static final int GEAR_RATIO = 10;
+        public static final double GEAR_RATIO = 10.71;
         public static final int WHEEL_SIZE_INCH = 6;
         public static final double TICKS_TO_METERS = (1.0 / 4096) * GEAR_RATIO * (WHEEL_SIZE_INCH * Math.PI / 1)
                 / 39.37;
