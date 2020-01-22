@@ -41,7 +41,7 @@ public class RobotContainer {
   private final Pneumatics pneumatics = new Pneumatics();
   private final Flywheel flywheel = new Flywheel();
 
-  private final AutonSelectorCommand autonOne = new AutonSelectorCommand(drivetrain, flywheel, intake, limelight,
+  private final AutonSelectorCommand autonSelector = new AutonSelectorCommand(drivetrain, flywheel, intake, limelight,
       pneumatics);
 
   /**
@@ -84,8 +84,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    * @throws IOException
    */
-  public Command getAutonomousCommand() throws IOException {
-    // An ExampleCommand will run in autonomous
-    return autonOne.getTestCommand();
+  public Command getAutonomousCommand(int auton) throws IOException {
+    switch (auton) {
+    case 1:
+      return autonSelector.getTestCommand();
+    case 2:
+      return autonSelector.getAutonOne();
+    default:
+      return null;
+    }
   }
 }

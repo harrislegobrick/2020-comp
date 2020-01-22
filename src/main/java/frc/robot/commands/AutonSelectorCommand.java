@@ -43,12 +43,14 @@ public class AutonSelectorCommand {
 
   public Command getAutonOne() throws IOException {
     // add trajectory to follow
-    RamseteCommand goToTrench = getRamseteCommand(TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/GoToTrench.wpilib.json")));
-    RamseteCommand trenchRun = getRamseteCommand(TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
+    RamseteCommand goToTrench = getRamseteCommand(
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/GoToTrench.wpilib.json")));
+    RamseteCommand trenchRun = getRamseteCommand(
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
 
-    return new InstantCommand(limelight::setTracking, limelight)
-        .andThen(new ShootCommand(flywheel).withTimeout(3).andThen(new InstantCommand(limelight::setDriving, limelight))
-            .andThen(goToTrench.andThen(new DeployIntakeCommand(intake, pneumatics).withTimeout(4).alongWith(trenchRun))));
+    return new InstantCommand(limelight::setTracking, limelight).andThen(new ShootCommand(flywheel).withTimeout(3))
+        .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
+        .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake, pneumatics)));
   }
 
   public Command getTestCommand() throws IOException {
