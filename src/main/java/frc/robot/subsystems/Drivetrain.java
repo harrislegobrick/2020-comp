@@ -53,6 +53,8 @@ public class Drivetrain extends SubsystemBase {
     // invert the motors so that positive is forward
     leftMaster.setInverted(Drive.INVERTED);
     rightMaster.setInverted(!Drive.INVERTED);
+    
+    // TODO: Change this to follow master. gears are confusing lol
     leftSlave.setInverted(InvertType.OpposeMaster);
     rightSlave.setInverted(InvertType.OpposeMaster);
 
