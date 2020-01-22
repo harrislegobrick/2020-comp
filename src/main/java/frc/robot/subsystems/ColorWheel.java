@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.ColorMatch;
@@ -52,9 +54,33 @@ public class ColorWheel extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0);
   }
 
+  /**
+   * Calculates the color that the wheel needs to be over given the number of
+   * colors the offset needs to be. Based upon going counterclockwise when looked
+   * at from the alliance wall.
+   * 
+   * @param ammount : the amount of colors over
+   * @return the color the sensor needs to detect for the FMS to agree upon the
+   *         sent color
+   */
   public Color getShiftedColor(int ammount) {
-    // TODO
-    return null;
+    Color fmsColor = getFMSColor();
+    HashMap<Color, Integer> map1 = new HashMap<Color, Integer>();
+    HashMap<Integer, Color> map2 = new HashMap<Integer, Color>();
+    map1.put(kBlueTarget, 0);
+    map1.put(kGreenTarget, 1);
+    map1.put(kRedTarget, 2);
+    map1.put(kYellowTarget, 3);
+
+    map2.put(0, kBlueTarget);
+    map2.put(1, kGreenTarget);
+    map2.put(2, kRedTarget);
+    map2.put(3, kYellowTarget);
+
+    int fms = map1.get(fmsColor);
+    int key = (fms - ammount) % 4;
+
+    return map2.get(key);
   }
 
   public Color getRawDetectedColor() {
