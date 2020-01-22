@@ -61,7 +61,7 @@ public class ColorWheel extends SubsystemBase {
     return sensor.getColor();
   }
 
-  public Color getFRCDetecteColor() {
+  public Color getColorWheelColor() {
     Color outputColor;
     ColorMatchResult match = matcher.matchClosestColor(getRawDetectedColor());
 
