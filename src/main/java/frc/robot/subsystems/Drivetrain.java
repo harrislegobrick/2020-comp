@@ -53,10 +53,8 @@ public class Drivetrain extends SubsystemBase {
     // invert the motors so that positive is forward
     leftMaster.setInverted(Drive.INVERTED);
     rightMaster.setInverted(!Drive.INVERTED);
-    
-    // TODO: Change this to follow master. gears are confusing lol
-    leftSlave.setInverted(InvertType.OpposeMaster);
-    rightSlave.setInverted(InvertType.OpposeMaster);
+    leftSlave.setInverted(InvertType.FollowMaster);
+    rightSlave.setInverted(InvertType.FollowMaster);
 
     // encoder setup
     leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Drive.PID_SLOT, Drive.LIL_TIMEOUT);
