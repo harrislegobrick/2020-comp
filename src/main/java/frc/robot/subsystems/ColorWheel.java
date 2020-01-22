@@ -26,6 +26,7 @@ public class ColorWheel extends SubsystemBase {
 
   private final ColorMatch matcher = new ColorMatch();
 
+  // in order of cw
   private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
   private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
   private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
@@ -59,11 +60,13 @@ public class ColorWheel extends SubsystemBase {
    * colors the offset needs to be. Based upon going counterclockwise when looked
    * at from the alliance wall.
    * 
-   * @param ammount : the amount of colors over
+   * @param ammount  : the amount of colors over
+   * @param reversed : if true then it will be a cw offset, false would be a ccw
+   *                 offset
    * @return the color the sensor needs to detect for the FMS to agree upon the
    *         sent color
    */
-  public Color getShiftedColor(int ammount) {
+  public Color getShiftedColor(int ammount, boolean reversed) {
     Color fmsColor = getFMSColor();
     HashMap<Color, Integer> map1 = new HashMap<Color, Integer>();
     HashMap<Integer, Color> map2 = new HashMap<Integer, Color>();
@@ -78,7 +81,7 @@ public class ColorWheel extends SubsystemBase {
     map2.put(3, kYellowTarget);
 
     int fms = map1.get(fmsColor);
-    int key = (fms - ammount) % 4;
+    int key = reversed ? (fms - ammount) % 4 : (fms + ammount) % 4;
 
     return map2.get(key);
   }
