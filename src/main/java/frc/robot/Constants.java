@@ -33,9 +33,9 @@ public final class Constants {
         public static final int BIG_TIMEOUT = 50;
 
         public static final int LEFT_MASTER = 0;
-        public static final int LEFT_SLAVE = 1;
-        public static final int RIGHT_MASTER = 2;
-        public static final int RIGHT_SLAVE = 3;
+        public static final int LEFT_SLAVE = 0;
+        public static final int RIGHT_MASTER = 1;
+        public static final int RIGHT_SLAVE = 1;
 
         public static final boolean kGyroReversed = true;
         public static final boolean SENSOR_PHASE = false;
