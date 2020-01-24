@@ -36,8 +36,8 @@ public class TankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double throttle = (1.0 - throt.getAsDouble()) / 2.0;
-    driveSubsystem.drive(left.getAsDouble() * throttle * 12, right.getAsDouble() * throttle * 12);
+    double throttle = (1.0 - throt.getAsDouble()) / -2.0;
+    driveSubsystem.drive(left.getAsDouble() * throttle, right.getAsDouble() * throttle);
   }
 
   // Called once the command ends or is interrupted.
