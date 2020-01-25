@@ -26,7 +26,7 @@ public class Limelight extends SubsystemBase {
 
   /** should return distance in feet */
   public double getDistance() {
-    double d = (Constants.Limelight.h2 - Constants.Limelight.h1) / Math.tan(Constants.Limelight.a1 + getY());
+    double d = (Constants.Limelight.h2 - Constants.Limelight.h1) / Math.tan(Math.toRadians(Constants.Limelight.a1 + getY()));
     return d;
   }
 
@@ -47,6 +47,7 @@ public class Limelight extends SubsystemBase {
     table.getEntry("ledMode").setNumber(1.0);
     table.getEntry("camMode").setNumber(1.0);
     tracking = false;
+    //set turret angle 0.
   }
 
   public double getX() {
