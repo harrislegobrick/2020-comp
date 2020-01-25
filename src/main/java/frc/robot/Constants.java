@@ -39,7 +39,7 @@ public final class Constants {
 
         public static final boolean kGyroReversed = true;
         public static final boolean SENSOR_PHASE = false;
-        public static final boolean INVERTED = false;
+        public static final boolean INVERTED = true;
         public static final int PID_SLOT = 0;
 
         // will need characterization to find values
@@ -64,7 +64,7 @@ public final class Constants {
 
     public static final class Limelight {
         public static final double a1 = 0; // mounting angle
-        public static final double h1 = 2; // height of your camera above the floor (in feet)
+        public static final double h1 = 0; // height of your camera above the floor (in feet)
         public static final double h2 = 6.77083; // height of the target (in feet)
     }
 
