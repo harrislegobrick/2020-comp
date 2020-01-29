@@ -8,17 +8,21 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import frc.robot.Constants.Drive;
 import frc.robot.commands.*;
 import frc.robot.commands.MoveTurret.Direction;
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -38,11 +42,7 @@ public class RobotContainer {
   private final Limelight limelight = new Limelight();
   private final Turret turret = new Turret();
   private final Intake intake = new Intake();
-  private final Pneumatics pneumatics = new Pneumatics();
   private final Flywheel flywheel = new Flywheel();
-
-  private final AutonSelectorCommand autonSelector = new AutonSelectorCommand(drivetrain, flywheel, intake, limelight,
-      pneumatics);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -75,7 +75,7 @@ public class RobotContainer {
     new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
-    new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, pneumatics));
+    new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake));
   }
 
   /**
@@ -84,14 +84,39 @@ public class RobotContainer {
    * @return the command to run in autonomous
    * @throws IOException
    */
-  public Command getAutonomousCommand(int auton) throws IOException {
-    switch (auton) {
-    case 1:
-      return autonSelector.getTestCommand();
-    case 2:
-      return autonSelector.getAutonOne();
-    default:
-      return null;
-    }
+  public Command getAutonOne() throws IOException {
+    // add trajectory to follow
+    RamseteCommand goToTrench = getRamseteCommand(
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/GoToTrench.wpilib.json")));
+    RamseteCommand trenchRun = getRamseteCommand(
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
+
+    return new InstantCommand(limelight::setTracking, limelight).andThen(new ShootCommand(flywheel).withTimeout(3))
+        .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
+        .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)));
+  }
+
+  /**
+   * Just drives straight
+   * @return : the command to drive straight
+   * @throws IOException
+   */
+  public Command getTestCommand() throws IOException {
+    RamseteCommand pathOne = getRamseteCommand(
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/GoToTrench.wpilib.json")));
+    return pathOne;
+  }
+
+  /**
+   * Wrapper for following a trajectory
+   * @param trajectory
+   * @return : returns a command that will follow a given path
+   */
+  private RamseteCommand getRamseteCommand(Trajectory trajectory) {
+    return new RamseteCommand(trajectory, drivetrain::getPose, new RamseteController(),
+        new SimpleMotorFeedforward(Drive.S_VOLTS, Drive.V_VOLTS_SECOND_PER_METER,
+            Drive.A_VOLT_SEONDS_SQUARED_PER_METER),
+        Drive.DRIVE_KINEMATICS, drivetrain::getWheelSpeeds, new PIDController(Drive.P_DRIVE_VEL, 0, 0),
+        new PIDController(Drive.P_DRIVE_VEL, 0, 0), drivetrain::driveVolts, drivetrain);
   }
 }
