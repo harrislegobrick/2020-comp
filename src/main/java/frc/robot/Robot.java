@@ -40,9 +40,9 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
     try {
-      chooser.setDefaultOption("Default Auto", robotContainer.getAutonomousCommand(1));
-      chooser.addOption("Main Auton", robotContainer.getAutonomousCommand(2));
-      chooser.addOption("Test Auton", robotContainer.getAutonomousCommand(1));
+      chooser.setDefaultOption("Default Auto", robotContainer.getTestCommand());
+      chooser.addOption("Main Auton", robotContainer.getAutonOne());
+      chooser.addOption("Test Auton", robotContainer.getTestCommand());
     } catch (IOException e) {
       e.printStackTrace();
       System.out.println("Couldn't find paths!");
