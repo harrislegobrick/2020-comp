@@ -9,11 +9,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Pneumatics;
 
 public class DeployIntakeCommand extends CommandBase {
   private Intake intake;
-  private Pneumatics pneumatics;
 
   /**
    * Creates a new DeployIntake.
@@ -22,17 +20,16 @@ public class DeployIntakeCommand extends CommandBase {
    * seconds desired
    * </p>
    */
-  public DeployIntakeCommand(Intake intake, Pneumatics pneumatics) {
+  public DeployIntakeCommand(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
-    this.pneumatics = pneumatics;
-    addRequirements(intake, pneumatics);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pneumatics.deployIntake();
+    intake.deployIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,7 +42,7 @@ public class DeployIntakeCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intake.stop();
-    pneumatics.retractIntake();
+    intake.retractIntake();
   }
 
   // Returns true when the command should end.
