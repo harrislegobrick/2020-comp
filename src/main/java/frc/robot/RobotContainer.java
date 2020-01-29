@@ -20,13 +20,12 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.*;
-import frc.robot.commands.MoveTurret.Direction;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -67,14 +66,10 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new POVButton(rJoy, Constants.JoySticks.POV_RIGHT).whenHeld(new MoveTurret(Direction.CW, turret));
-    // V should do the same thing as ^ but it's inlined
-    new POVButton(rJoy, Constants.JoySticks.POV_LEFT).whenHeld(new FunctionalCommand(() -> {
-    }, () -> turret.setPercentOutput(-0.3), i -> turret.stop(), () -> false, turret)); // shorter notation?
-    // new POVButton(rJoystick,
-    // Constants.JoySticks.POV_LEFT).whileActiveContinuous(() ->
-    // turret.setPercentOutput(-0.3), turret).whenInactive(turret::stop, turret); //
-    // could be shorter notation idk
+    new POVButton(rJoy, Constants.JoySticks.POV_RIGHT).whenPressed(new RunCommand(turret::turnRight, turret))
+        .whenReleased(turret::stop, turret);
+    new POVButton(rJoy, Constants.JoySticks.POV_LEFT).whenPressed(new RunCommand(turret::turnLeft, turret))
+        .whenReleased(turret::stop, turret);
 
     new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
