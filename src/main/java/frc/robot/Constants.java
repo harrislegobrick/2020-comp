@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final class Drive {
+    public static final class kDrivetrain {
         public static final double GEAR_RATIO = 10.71;
         public static final int WHEEL_SIZE_INCH = 6;
         public static final double TICKS_TO_METERS = (1.0 / 4096) * GEAR_RATIO * (WHEEL_SIZE_INCH * Math.PI / 1)
@@ -52,7 +52,7 @@ public final class Constants {
         public static final double P_DRIVE_VEL = 0;
     }
 
-    public static final class JoySticks {
+    public static final class kJoySticks {
         public static final int LEFT = 0;
         public static final int RIGHT = 1;
 
@@ -62,13 +62,13 @@ public final class Constants {
         public static final int POV_LEFT = 270;
     }
 
-    public static final class Limelight {
+    public static final class kLimelight {
         public static final double a1 = 0; // mounting angle
         public static final double h1 = 0; // height of your camera above the floor (in feet)
         public static final double h2 = 6.77083; // height of the target (in feet)
     }
 
-    public static final class Turret {
+    public static final class kTurret {
         public static final int MOTOR = 5;
         public static final boolean INVERTED = false;
         // WILL NEED TUNING
@@ -77,7 +77,7 @@ public final class Constants {
         public static final double kD = 0;
     }
 
-    public static final class Flywheel {
+    public static final class kFlywheel {
         public static final int MOTOR = 6;
         public static final boolean INVERTED = false;
         // WILL NEED TUNING
@@ -88,13 +88,16 @@ public final class Constants {
         public static final double kIZone = 0;
     }
 
-    public static final class Intake {
+    public static final class kIntake {
         public static final int MOTOR = 6;
         public static final boolean INVERTED = false;
-    }
 
-    public static final class Pneumatics {
         public static final int INTAKE_FORWARD = 0;
         public static final int INTAKE_REVERSE = 1;
+    }
+
+    public static final class kColorWheel {
+        public static final int MOTOR = 0;
+        public static final boolean INVERTED = false;
     }
 }
