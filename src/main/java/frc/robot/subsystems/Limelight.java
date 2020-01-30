@@ -10,7 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.kLimelight;;
 
 public class Limelight extends SubsystemBase {
   private static NetworkTable table;
@@ -26,7 +26,7 @@ public class Limelight extends SubsystemBase {
 
   /** should return distance in feet */
   public double getDistance() {
-    double d = (Constants.Limelight.h2 - Constants.Limelight.h1) / Math.tan(Math.toRadians(Constants.Limelight.a1 + getY()));
+    double d = (kLimelight.h2 - kLimelight.h1) / Math.tan(Math.toRadians(kLimelight.a1 + getY()));
     return d;
   }
 

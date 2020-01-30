@@ -13,7 +13,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.kTurret;
 
 public class Turret extends SubsystemBase {
   private final TalonSRX motor;
@@ -22,10 +22,10 @@ public class Turret extends SubsystemBase {
    * Creates a new Turret.
    */
   public Turret() {
-    motor = new TalonSRX(Constants.Turret.MOTOR);
+    motor = new TalonSRX(kTurret.MOTOR);
 
     motor.configFactoryDefault();
-    motor.setInverted(Constants.Turret.INVERTED);
+    motor.setInverted(kTurret.INVERTED);
     motor.setNeutralMode(NeutralMode.Brake);
     motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 

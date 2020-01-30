@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.kFlywheel;;
 
 public class Flywheel extends SubsystemBase {
   private final CANSparkMax motor;
@@ -24,19 +24,19 @@ public class Flywheel extends SubsystemBase {
    * Creates a new Flywheel.
    */
   public Flywheel() {
-    motor = new CANSparkMax(Constants.Flywheel.MOTOR, MotorType.kBrushless);
+    motor = new CANSparkMax(kFlywheel.MOTOR, MotorType.kBrushless);
     pController = motor.getPIDController();
 
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
-    motor.setInverted(Constants.Flywheel.INVERTED);
+    motor.setInverted(kFlywheel.INVERTED);
 
     pController.setFeedbackDevice(motor.getEncoder());
-    pController.setP(Constants.Flywheel.kP);
-    pController.setI(Constants.Flywheel.kI);
-    pController.setD(Constants.Flywheel.kD);
-    pController.setFF(Constants.Flywheel.kFF);
-    pController.setIZone(Constants.Flywheel.kIZone);
+    pController.setP(kFlywheel.kP);
+    pController.setI(kFlywheel.kI);
+    pController.setD(kFlywheel.kD);
+    pController.setFF(kFlywheel.kFF);
+    pController.setIZone(kFlywheel.kIZone);
   }
 
   public void setVelocity(double value) {

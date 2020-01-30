@@ -14,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.kIntake;
 
 public class Intake extends SubsystemBase {
   private final VictorSPX motor;
@@ -24,13 +24,13 @@ public class Intake extends SubsystemBase {
    * Creates a new Intake.
    */
   public Intake() {
-    motor = new VictorSPX(Constants.Intake.MOTOR);
-    intake = new DoubleSolenoid(Constants.Pneumatics.INTAKE_FORWARD, Constants.Pneumatics.INTAKE_REVERSE);
+    motor = new VictorSPX(kIntake.MOTOR);
+    intake = new DoubleSolenoid(kIntake.INTAKE_FORWARD, kIntake.INTAKE_REVERSE);
 
     intake.set(Value.kReverse);
 
     motor.configFactoryDefault();
-    motor.setInverted(Constants.Intake.INVERTED);
+    motor.setInverted(kIntake.INVERTED);
     motor.setNeutralMode(NeutralMode.Brake);
   }
 
