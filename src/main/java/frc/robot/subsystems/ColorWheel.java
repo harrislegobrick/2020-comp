@@ -19,12 +19,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.kColorWheel;
 
 public class ColorWheel extends SubsystemBase {
   private final WPI_VictorSPX motor;
   private final ColorSensorV3 sensor;
 
   private final ColorMatch matcher = new ColorMatch();
+  private final HashMap<Color, Integer> colorToInt = new HashMap<Color, Integer>();
+  private final HashMap<Integer, Color> intToColor = new HashMap<Integer, Color>();
 
   // in order of cw
   private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
@@ -37,14 +40,24 @@ public class ColorWheel extends SubsystemBase {
    */
   public ColorWheel() {
     sensor = new ColorSensorV3(I2C.Port.kOnboard);
-    motor = new WPI_VictorSPX(6);
+    motor = new WPI_VictorSPX(kColorWheel.MOTOR);
 
-    motor.setInverted(false);
+    motor.setInverted(kColorWheel.INVERTED);
 
     matcher.addColorMatch(kBlueTarget);
     matcher.addColorMatch(kGreenTarget);
     matcher.addColorMatch(kRedTarget);
     matcher.addColorMatch(kYellowTarget);
+
+    colorToInt.put(kBlueTarget, 0);
+    colorToInt.put(kGreenTarget, 1);
+    colorToInt.put(kRedTarget, 2);
+    colorToInt.put(kYellowTarget, 3);
+
+    intToColor.put(0, kBlueTarget);
+    intToColor.put(1, kGreenTarget);
+    intToColor.put(2, kRedTarget);
+    intToColor.put(3, kYellowTarget);
   }
 
   public void runMotor() {
@@ -67,23 +80,9 @@ public class ColorWheel extends SubsystemBase {
    *         sent color
    */
   public Color getShiftedColor(int ammount, boolean reversed) {
-    Color fmsColor = getFMSColor();
-    HashMap<Color, Integer> map1 = new HashMap<Color, Integer>();
-    HashMap<Integer, Color> map2 = new HashMap<Integer, Color>();
-    map1.put(kBlueTarget, 0);
-    map1.put(kGreenTarget, 1);
-    map1.put(kRedTarget, 2);
-    map1.put(kYellowTarget, 3);
-
-    map2.put(0, kBlueTarget);
-    map2.put(1, kGreenTarget);
-    map2.put(2, kRedTarget);
-    map2.put(3, kYellowTarget);
-
-    int fms = map1.get(fmsColor);
+    int fms = colorToInt.get(getFMSColor());
     int key = reversed ? (fms - ammount) % 4 : (fms + ammount) % 4;
-
-    return map2.get(key);
+    return intToColor.get(key);
   }
 
   public Color getRawDetectedColor() {
