@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import frc.robot.Constants.Drive;
+import frc.robot.Constants.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,8 +38,8 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Joystick lJoy = new Joystick(Constants.JoySticks.LEFT);
-  private final Joystick rJoy = new Joystick(Constants.JoySticks.RIGHT);
+  private final Joystick lJoy = new Joystick(kJoySticks.LEFT);
+  private final Joystick rJoy = new Joystick(kJoySticks.RIGHT);
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Limelight limelight = new Limelight();
@@ -53,7 +53,7 @@ public class RobotContainer {
   public RobotContainer() {
     drivetrain.setDefaultCommand(new TankDrive(lJoy::getY, rJoy::getY, rJoy::getThrottle, drivetrain));
     turret.setDefaultCommand(
-        new PIDCommand(new PIDController(Constants.Turret.kP, Constants.Turret.kI, Constants.Turret.kD),
+        new PIDCommand(new PIDController(kTurret.kP, kTurret.kI, kTurret.kD),
             limelight::getX, 0, output -> turret.setCurrent(output), turret));
 
     configureButtonBindings();
@@ -66,13 +66,13 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new POVButton(rJoy, Constants.JoySticks.POV_RIGHT).whenPressed(new RunCommand(turret::turnRight, turret))
+    new POVButton(rJoy, kJoySticks.POV_RIGHT).whenPressed(new RunCommand(turret::turnRight, turret))
         .whenReleased(turret::stop, turret);
-    new POVButton(rJoy, Constants.JoySticks.POV_LEFT).whenPressed(new RunCommand(turret::turnLeft, turret))
+    new POVButton(rJoy, kJoySticks.POV_LEFT).whenPressed(new RunCommand(turret::turnLeft, turret))
         .whenReleased(turret::stop, turret);
 
-    new POVButton(rJoy, Constants.JoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
-    new POVButton(rJoy, Constants.JoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
+    new POVButton(rJoy, kJoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
+    new POVButton(rJoy, kJoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
     new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake));
   }
@@ -96,7 +96,7 @@ public class RobotContainer {
   }
 
   /**
-   * Just drives straight
+   * Just <b>drives</b> straight
    * 
    * @return : the command to drive straight
    * @throws IOException
@@ -110,14 +110,14 @@ public class RobotContainer {
   /**
    * Wrapper for following a trajectory
    * 
-   * @param trajectory
-   * @return : returns a command that will follow a given path
+   * @param trajectory : trajectory to follow
+   * @return a command that will follow a given path
    */
   private RamseteCommand getRamseteCommand(Trajectory trajectory) {
     return new RamseteCommand(trajectory, drivetrain::getPose, new RamseteController(),
-        new SimpleMotorFeedforward(Drive.S_VOLTS, Drive.V_VOLTS_SECOND_PER_METER,
-            Drive.A_VOLT_SEONDS_SQUARED_PER_METER),
-        Drive.DRIVE_KINEMATICS, drivetrain::getWheelSpeeds, new PIDController(Drive.P_DRIVE_VEL, 0, 0),
-        new PIDController(Drive.P_DRIVE_VEL, 0, 0), drivetrain::driveVolts, drivetrain);
+        new SimpleMotorFeedforward(kDrivetrain.S_VOLTS, kDrivetrain.V_VOLTS_SECOND_PER_METER,
+            kDrivetrain.A_VOLT_SEONDS_SQUARED_PER_METER),
+        kDrivetrain.DRIVE_KINEMATICS, drivetrain::getWheelSpeeds, new PIDController(kDrivetrain.P_DRIVE_VEL, 0, 0),
+        new PIDController(kDrivetrain.P_DRIVE_VEL, 0, 0), drivetrain::driveVolts, drivetrain);
   }
 }
