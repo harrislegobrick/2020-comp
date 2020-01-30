@@ -57,15 +57,15 @@ public class Drivetrain extends SubsystemBase {
     rightSlave.setInverted(InvertType.FollowMaster);
 
     // encoder setup
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kDrivetrain.PID_SLOT, kDrivetrain.LIL_TIMEOUT);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kDrivetrain.PID_SLOT,
+        kDrivetrain.LIL_TIMEOUT);
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kDrivetrain.PID_SLOT,
         kDrivetrain.LIL_TIMEOUT);
     leftMaster.setSensorPhase(kDrivetrain.SENSOR_PHASE);
     rightMaster.setSensorPhase(!kDrivetrain.SENSOR_PHASE);
 
     // zero encoders
-    leftMaster.setSelectedSensorPosition(0);
-    rightMaster.setSelectedSensorPosition(0);
+    zeroEncoders();
   }
 
   /**
@@ -76,6 +76,11 @@ public class Drivetrain extends SubsystemBase {
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS,
         rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS);
+  }
+
+  public void zeroEncoders() {
+    leftMaster.setSelectedSensorPosition(0);
+    rightMaster.setSelectedSensorPosition(0);
   }
 
   public void drive(double left, double right) {
