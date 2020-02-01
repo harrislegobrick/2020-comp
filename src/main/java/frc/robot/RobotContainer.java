@@ -23,7 +23,6 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -43,7 +42,7 @@ public class RobotContainer {
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Limelight limelight = new Limelight();
-  private final Turret turret = new Turret();
+  private final Turret turret = new Turret(limelight);
   private final Intake intake = new Intake();
   private final Flywheel flywheel = new Flywheel();
 
@@ -52,9 +51,6 @@ public class RobotContainer {
    */
   public RobotContainer() {
     drivetrain.setDefaultCommand(new TankDrive(lJoy::getY, rJoy::getY, rJoy::getThrottle, drivetrain));
-    turret.setDefaultCommand(
-        new PIDCommand(new PIDController(kTurret.kP, kTurret.kI, kTurret.kD),
-            limelight::getX, 0, output -> turret.setCurrent(output), turret));
 
     configureButtonBindings();
   }
@@ -71,10 +67,14 @@ public class RobotContainer {
     new POVButton(rJoy, kJoySticks.POV_LEFT).whenPressed(new RunCommand(turret::turnLeft, turret))
         .whenReleased(turret::stop, turret);
 
-    new POVButton(rJoy, kJoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
-    new POVButton(rJoy, kJoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
+    new POVButton(rJoy, kJoySticks.POV_UP).whenPressed(turret::enable, turret);
+    new POVButton(rJoy, kJoySticks.POV_DOWN).whenPressed(turret::disable, turret);
+
+    new POVButton(lJoy, kJoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
+    new POVButton(lJoy, kJoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
     new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake));
+    new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight));
   }
 
   /**
@@ -90,7 +90,8 @@ public class RobotContainer {
     RamseteCommand trenchRun = getRamseteCommand(
         TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
 
-    return new InstantCommand(limelight::setTracking, limelight).andThen(new ShootCommand(flywheel).withTimeout(3))
+    return new InstantCommand(limelight::setTracking, limelight)
+        .andThen(new ShootCommand(flywheel, limelight).withTimeout(3))
         .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
         .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)));
   }
