@@ -24,7 +24,7 @@ public class Limelight extends SubsystemBase {
     setDriving();
   }
 
-  /** should return distance in feet */
+  /** @return should return distance in feet from the base of the power port */
   public double getDistance() {
     double d = (kLimelight.h2 - kLimelight.h1) / Math.tan(Math.toRadians(kLimelight.a1 + getY()));
     return d;
@@ -47,7 +47,7 @@ public class Limelight extends SubsystemBase {
     table.getEntry("ledMode").setNumber(1.0);
     table.getEntry("camMode").setNumber(1.0);
     tracking = false;
-    //set turret angle 0.
+    // set turret angle 0.
   }
 
   public double getX() {
