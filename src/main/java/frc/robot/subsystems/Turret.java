@@ -10,19 +10,23 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants.kTurret;
 
-public class Turret extends SubsystemBase {
-  private final TalonSRX motor;
+public class Turret extends PIDSubsystem {
+  private final WPI_TalonSRX motor;
+  private final Limelight limelight;
 
   /**
    * Creates a new Turret.
    */
-  public Turret() {
-    motor = new TalonSRX(kTurret.MOTOR);
+  public Turret(Limelight limelight){
+    super(new PIDController(kTurret.kP, kTurret.kI, kTurret.kD));
+    this.limelight = limelight;
+    motor = new WPI_TalonSRX(kTurret.MOTOR);
 
     motor.configFactoryDefault();
     motor.setInverted(kTurret.INVERTED);
@@ -30,6 +34,16 @@ public class Turret extends SubsystemBase {
     motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
 
     // will need to do PID assignments here
+  }
+
+  @Override
+  protected void useOutput(double output, double setpoint) {
+    motor.set(ControlMode.PercentOutput, output);
+  }
+
+  @Override
+  protected double getMeasurement() {
+    return limelight.getX();
   }
 
   public void setCurrent(double value) {
