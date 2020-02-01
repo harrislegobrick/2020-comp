@@ -31,7 +31,6 @@ public class Flywheel extends SubsystemBase {
     motor.setIdleMode(IdleMode.kBrake);
     motor.setInverted(kFlywheel.INVERTED);
 
-    pController.setFeedbackDevice(motor.getEncoder());
     pController.setP(kFlywheel.kP);
     pController.setI(kFlywheel.kI);
     pController.setD(kFlywheel.kD);
@@ -39,8 +38,13 @@ public class Flywheel extends SubsystemBase {
     pController.setIZone(kFlywheel.kIZone);
   }
 
-  public void setVelocity(double value) {
-    pController.setReference(value, ControlType.kVelocity);
+  /**
+   * 4000 RPM is a good value for launching from 15 ft away.
+   * 
+   * @param velocity : The velocity to set the motor to.
+   */
+  public void setVelocity(double velocity) {
+    pController.setReference(velocity, ControlType.kVelocity);
   }
 
   public void stop() {
