@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kDrivetrain;
 
@@ -62,7 +63,7 @@ public class Drivetrain extends SubsystemBase {
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kDrivetrain.PID_SLOT,
         kDrivetrain.LIL_TIMEOUT);
     leftMaster.setSensorPhase(kDrivetrain.SENSOR_PHASE);
-    rightMaster.setSensorPhase(!kDrivetrain.SENSOR_PHASE);
+    rightMaster.setSensorPhase(kDrivetrain.SENSOR_PHASE);
 
     // zero encoders
     zeroEncoders();
@@ -116,5 +117,6 @@ public class Drivetrain extends SubsystemBase {
     odometry.update(Rotation2d.fromDegrees(getHeading()),
         leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS,
         rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS);
+    SmartDashboard.putData(gyro);
   }
 }
