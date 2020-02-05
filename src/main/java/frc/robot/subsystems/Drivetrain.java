@@ -67,6 +67,8 @@ public class Drivetrain extends SubsystemBase {
 
     // zero encoders
     zeroEncoders();
+
+    SmartDashboard.putData(gyro);
   }
 
   /**
@@ -117,6 +119,7 @@ public class Drivetrain extends SubsystemBase {
     odometry.update(Rotation2d.fromDegrees(getHeading()),
         leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS,
         rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS);
-    SmartDashboard.putData(gyro);
+    SmartDashboard.putNumber("distance traveled", (leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS
+        + rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS) / 2);
   }
 }
