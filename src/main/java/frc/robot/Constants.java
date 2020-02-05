@@ -100,4 +100,9 @@ public final class Constants {
         public static final int MOTOR = 0;
         public static final boolean INVERTED = false;
     }
+
+    public static final class kBelts {
+        public static final int MOTOR = 5;
+        public static final boolean INVERTED = false;
+    }
 }

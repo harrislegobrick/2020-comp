@@ -45,6 +45,7 @@ public class RobotContainer {
   private final Turret turret = new Turret(limelight);
   private final Intake intake = new Intake();
   private final Flywheel flywheel = new Flywheel();
+  private final Belts belts = new Belts();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -74,7 +75,7 @@ public class RobotContainer {
     new POVButton(lJoy, kJoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
     new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake));
-    new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight));
+    new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
     new JoystickButton(lJoy, 2).whenPressed(drivetrain::zeroEncoders, drivetrain);
   }
 
@@ -92,7 +93,7 @@ public class RobotContainer {
         TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
 
     return new InstantCommand(limelight::setTracking, limelight)
-        .andThen(new ShootCommand(flywheel, limelight).withTimeout(3))
+        .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
         .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
         .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)));
   }
