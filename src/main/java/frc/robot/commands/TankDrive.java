@@ -37,7 +37,7 @@ public class TankDrive extends CommandBase {
   @Override
   public void execute() {
     double throttle = (1.0 - throt.getAsDouble()) / -2.0;
-    driveSubsystem.drive(right.getAsDouble() * throttle, left.getAsDouble() * throttle);
+    driveSubsystem.drive(left.getAsDouble() * throttle, right.getAsDouble() * throttle);
   }
 
   // Called once the command ends or is interrupted.
