@@ -106,7 +106,7 @@ public class RobotContainer {
    */
   public Command getTestCommand() throws IOException {
     RamseteCommand pathOne = getRamseteCommand(
-        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/GoToTrench.wpilib.json")));
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
     return pathOne;
   }
 
