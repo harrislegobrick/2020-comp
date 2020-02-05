@@ -77,6 +77,7 @@ public class RobotContainer {
     new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake));
     new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
     new JoystickButton(lJoy, 2).whenPressed(drivetrain::zeroEncoders, drivetrain);
+    new JoystickButton(lJoy, 3).whenPressed(drivetrain::resetGyro, drivetrain);
   }
 
   /**

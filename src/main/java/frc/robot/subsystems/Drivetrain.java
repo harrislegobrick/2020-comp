@@ -96,6 +96,10 @@ public class Drivetrain extends SubsystemBase {
     rightMaster.setVoltage(-rightVolts);
   }
 
+  public void resetGyro() {
+    gyro.reset();
+  }
+
   public void stop() {
     rightMaster.set(ControlMode.PercentOutput, 0);
     leftMaster.set(ControlMode.PercentOutput, 0);
