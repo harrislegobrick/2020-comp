@@ -47,6 +47,10 @@ public class Flywheel extends SubsystemBase {
     pController.setReference(velocity, ControlType.kVelocity);
   }
 
+  public double getVelocity(){
+    return motor.getEncoder().getVelocity();
+  }
+
   public void stop() {
     motor.set(0);
   }
