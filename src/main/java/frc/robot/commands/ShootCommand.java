@@ -8,20 +8,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Belts;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Limelight;
 
 public class ShootCommand extends CommandBase {
   private final Flywheel flywheel;
   private final Limelight limelight;
+  private final Belts belts;
 
   /**
    * Creates a new ShootCommand.
    */
-  public ShootCommand(Flywheel flywheel, Limelight limelight) {
+  public ShootCommand(Flywheel flywheel, Limelight limelight, Belts belts) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.flywheel = flywheel;
     this.limelight = limelight;
+    this.belts = belts;
     addRequirements(flywheel);
   }
 
@@ -38,12 +41,19 @@ public class ShootCommand extends CommandBase {
       flywheel.setVelocity(267 * limelight.getDistance());
     else
       flywheel.setVelocity(4000);
+
+    if (flywheel.getVelocity() > 3900) {
+      belts.run();
+    } else {
+      belts.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     flywheel.stop();
+    belts.stop();
   }
 
   // Returns true when the command should end.
