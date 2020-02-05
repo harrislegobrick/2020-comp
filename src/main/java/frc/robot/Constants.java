@@ -23,8 +23,7 @@ public final class Constants {
     public static final class kDrivetrain {
         public static final double GEAR_RATIO = 10.71;
         public static final int WHEEL_SIZE_INCH = 6;
-        public static final double TICKS_TO_METERS = (1.0 / 4096) * GEAR_RATIO * (WHEEL_SIZE_INCH * Math.PI / 1)
-                / 39.37;
+        public static final double TICKS_TO_METERS = (1.0 / 4096) * (WHEEL_SIZE_INCH * Math.PI) / 39.37;
         public static final double TRACK_WIDTH_METERS = 0.69;
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(
                 TRACK_WIDTH_METERS);
@@ -33,12 +32,12 @@ public final class Constants {
         public static final int BIG_TIMEOUT = 50;
 
         public static final int LEFT_MASTER = 1;
-        public static final int LEFT_SLAVE = 1;
-        public static final int RIGHT_MASTER = 0;
-        public static final int RIGHT_SLAVE = 0;
+        public static final int LEFT_SLAVE = 2;
+        public static final int RIGHT_MASTER = 3;
+        public static final int RIGHT_SLAVE = 4;
 
         public static final boolean kGyroReversed = true;
-        public static final boolean SENSOR_PHASE = false;
+        public static final boolean SENSOR_PHASE = true;
         public static final boolean INVERTED = false;
         public static final int PID_SLOT = 0;
 
@@ -89,7 +88,7 @@ public final class Constants {
     }
 
     public static final class kIntake {
-        public static final int MOTOR = 2;
+        public static final int MOTOR = 5;
         public static final boolean INVERTED = true;
 
         public static final int INTAKE_FORWARD = 0;
