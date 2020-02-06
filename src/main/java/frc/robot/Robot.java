@@ -9,6 +9,7 @@ package frc.robot;
 
 import java.io.IOException;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,11 +42,15 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     try {
       chooser.setDefaultOption("Default Auto", robotContainer.getTestCommand());
-      chooser.addOption("Main Auton", robotContainer.getAutonOne());
       chooser.addOption("Test Auton", robotContainer.getTestCommand());
     } catch (IOException e) {
-      e.printStackTrace();
-      System.out.println("Couldn't find paths!");
+      DriverStation.reportError("Couldn't find test path!", e.getStackTrace());
+    }
+
+    try {
+      chooser.addOption("Main Auton", robotContainer.getAutonOne());
+    } catch (IOException e) {
+      DriverStation.reportError("Couldn't find auton one path!", e.getStackTrace());
     }
     SmartDashboard.putData("Auto mode", chooser);
   }
