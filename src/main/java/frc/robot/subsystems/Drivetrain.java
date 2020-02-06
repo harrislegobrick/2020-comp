@@ -111,7 +111,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetGyro() {
-    gyro.reset();
+    gyro.zeroYaw();
   }
 
   public void stop() {
@@ -137,6 +137,5 @@ public class Drivetrain extends SubsystemBase {
     odometry.update(Rotation2d.fromDegrees(getHeading()),
         leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS,
         rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS);
-    System.out.println("pose\t" + odometry.getPoseMeters());
   }
 }
