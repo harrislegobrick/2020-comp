@@ -65,8 +65,19 @@ public class Drivetrain extends SubsystemBase {
     leftMaster.setSensorPhase(kDrivetrain.SENSOR_PHASE);
     rightMaster.setSensorPhase(kDrivetrain.SENSOR_PHASE);
 
-    // zero encoders
+    // ramping
+    leftMaster.configOpenloopRamp(kDrivetrain.OPEN_LOOP_RAMP);
+    rightMaster.configOpenloopRamp(kDrivetrain.OPEN_LOOP_RAMP);
+
+    // voltage compensation
+    leftMaster.configVoltageCompSaturation(kDrivetrain.VOLTAGE_COMP_SATURATION);
+    leftMaster.enableVoltageCompensation(kDrivetrain.VOLTAGE_COMP_ENABLED);
+    rightMaster.configVoltageCompSaturation(kDrivetrain.VOLTAGE_COMP_SATURATION);
+    rightMaster.enableVoltageCompensation(kDrivetrain.VOLTAGE_COMP_ENABLED);
+
+    // zero sensors
     zeroEncoders();
+    resetGyro();
 
     SmartDashboard.putData(gyro);
   }
@@ -77,8 +88,11 @@ public class Drivetrain extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS,
-        rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS);
+    return new DifferentialDriveWheelSpeeds(
+        leftMaster.getSelectedSensorVelocity() * kDrivetrain.TICKS_TO_METERS
+            * kDrivetrain.HUNDRED_MS_TO_SECONDS_CONVERSION,
+        rightMaster.getSelectedSensorVelocity() * kDrivetrain.TICKS_TO_METERS
+            * kDrivetrain.HUNDRED_MS_TO_SECONDS_CONVERSION);
   }
 
   public void zeroEncoders() {
@@ -93,7 +107,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void driveVolts(double leftVolts, double rightVolts) {
     leftMaster.setVoltage(leftVolts);
-    rightMaster.setVoltage(-rightVolts);
+    rightMaster.setVoltage(rightVolts);
   }
 
   public void resetGyro() {
@@ -123,7 +137,6 @@ public class Drivetrain extends SubsystemBase {
     odometry.update(Rotation2d.fromDegrees(getHeading()),
         leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS,
         rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS);
-    SmartDashboard.putNumber("distance traveled", (leftMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS
-        + rightMaster.getSelectedSensorPosition() * kDrivetrain.TICKS_TO_METERS) / 2);
+    System.out.println("pose\t" + odometry.getPoseMeters());
   }
 }
