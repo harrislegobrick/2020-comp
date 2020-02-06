@@ -8,8 +8,9 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-
+import java.nio.file.Path;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -84,31 +85,46 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   * @throws IOException
    */
-  public Command getAutonOne() throws IOException {
-    // add trajectory to follow
-    RamseteCommand goToTrench = getRamseteCommand(
-        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/GoToTrench.wpilib.json")));
-    RamseteCommand trenchRun = getRamseteCommand(
-        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/RunTrench.wpilib.json")));
+  public Command getAutonOne() {
+    String goToTrenchJSON = "paths/GoToTrench.wpilib.json";
+    String runTrenchJSON = "paths/RunTrench.wpilib.json";
+    try {
+      Path goToTrenchPath = Filesystem.getDeployDirectory().toPath().resolve(goToTrenchJSON);
+      Path runTrenchPath = Filesystem.getDeployDirectory().toPath().resolve(runTrenchJSON);
 
-    return new InstantCommand(limelight::setTracking, limelight)
-        .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
-        .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
-        .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)).andThen(drivetrain::stop, drivetrain));
+      Trajectory goToTrenchTrajectory = TrajectoryUtil.fromPathweaverJson(goToTrenchPath);
+      Trajectory runTrenchTrajectory = TrajectoryUtil.fromPathweaverJson(runTrenchPath);
+      RamseteCommand goToTrench = getRamseteCommand(goToTrenchTrajectory);
+      RamseteCommand trenchRun = getRamseteCommand(runTrenchTrajectory);
+
+      return new InstantCommand(limelight::setTracking, limelight)
+          .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
+          .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
+          .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)).andThen(() -> drivetrain.driveVolts(0, 0)));
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectorys: " + goToTrenchJSON + " " + runTrenchJSON,
+          ex.getStackTrace());
+    }
+    return null;
   }
 
   /**
    * Just <b>drives</b> straight
    * 
    * @return : the command to drive straight
-   * @throws IOException
    */
-  public Command getTestCommand() throws IOException {
-    RamseteCommand pathOne = getRamseteCommand(
-        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/RunTrench.wpilib.json")));
-    return pathOne.andThen(drivetrain::stop, drivetrain);
+  public Command getTestCommand() {
+    String trajectoryJSON = "paths/RunTrench.wpilib.json";
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      RamseteCommand pathOne = getRamseteCommand(trajectory);
+      return pathOne.andThen(() -> drivetrain.driveVolts(0, 0));
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+    return null;
   }
 
   /**

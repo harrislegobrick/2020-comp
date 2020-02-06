@@ -7,9 +7,6 @@
 
 package frc.robot;
 
-import java.io.IOException;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,18 +37,10 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-    try {
-      chooser.setDefaultOption("Default Auto", robotContainer.getTestCommand());
-      chooser.addOption("Test Auton", robotContainer.getTestCommand());
-    } catch (IOException e) {
-      DriverStation.reportError("Couldn't find test path!", e.getStackTrace());
-    }
+    chooser.setDefaultOption("Default Auto", robotContainer.getTestCommand());
+    chooser.addOption("Main Auton", robotContainer.getAutonOne());
+    chooser.addOption("Test Auton", robotContainer.getTestCommand());
 
-    try {
-      chooser.addOption("Main Auton", robotContainer.getAutonOne());
-    } catch (IOException e) {
-      DriverStation.reportError("Couldn't find auton one path!", e.getStackTrace());
-    }
     SmartDashboard.putData("Auto mode", chooser);
   }
 
