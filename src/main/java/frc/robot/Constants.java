@@ -26,7 +26,7 @@ public final class Constants {
         public static final int HUNDRED_MS_TO_SECONDS_CONVERSION = 10;
         public static final double TICKS_TO_METERS = (1.0 / 4096) * (WHEEL_SIZE_INCH * Math.PI)
                 / /* convert from inch to meter */ 39.37;
-        public static final double TRACK_WIDTH_METERS = 0.555625;
+        public static final double TRACK_WIDTH_METERS = 0.5511407932368775;
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(
                 TRACK_WIDTH_METERS);
 
@@ -48,13 +48,13 @@ public final class Constants {
         public static final boolean VOLTAGE_COMP_ENABLED = true;
 
         // will need characterization to find values
-        public static final double S_VOLTS = 0.633;
-        public static final double V_VOLTS_SECOND_PER_METER = 8.98E-8;
-        public static final double A_VOLT_SEONDS_SQUARED_PER_METER = 1.16E-8;
+        public static final double S_VOLTS = 0.675;
+        public static final double V_VOLTS_SECOND_PER_METER = 3.15;
+        public static final double A_VOLT_SEONDS_SQUARED_PER_METER = 0.404;
 
         public static final double MAX_SPEED_METERS_PER_SECOND = 5;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 2;
-        public static final double P_DRIVE_VEL = 1.76E-7;
+        public static final double P_DRIVE_VEL = 14.1;
     }
 
     public static final class kJoySticks {
