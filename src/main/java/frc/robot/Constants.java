@@ -24,7 +24,8 @@ public final class Constants {
         public static final double GEAR_RATIO = 10.71;
         public static final int WHEEL_SIZE_INCH = 6;
         public static final int HUNDRED_MS_TO_SECONDS_CONVERSION = 10;
-        public static final double TICKS_TO_METERS = (1.0 / 4096) * (WHEEL_SIZE_INCH * Math.PI) / 39.37;
+        public static final double TICKS_TO_METERS = (1.0 / 4096) * (WHEEL_SIZE_INCH * Math.PI)
+                / /* convert from inch to meter */ 39.37;
         public static final double TRACK_WIDTH_METERS = 0.555625;
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(
                 TRACK_WIDTH_METERS);
@@ -43,8 +44,8 @@ public final class Constants {
         public static final boolean INVERTED = false;
         public static final int PID_SLOT = 0;
 
-        public static final double VOLTAGE_COMP_SATURATION = 11.5;
-		public static final boolean VOLTAGE_COMP_ENABLED = true;
+        public static final double VOLTAGE_COMP_SATURATION = 12;
+        public static final boolean VOLTAGE_COMP_ENABLED = true;
 
         // will need characterization to find values
         public static final double S_VOLTS = 0.633;
