@@ -96,7 +96,7 @@ public class RobotContainer {
     return new InstantCommand(limelight::setTracking, limelight)
         .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
         .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
-        .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)));
+        .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)).andThen(drivetrain::stop, drivetrain));
   }
 
   /**
@@ -108,7 +108,7 @@ public class RobotContainer {
   public Command getTestCommand() throws IOException {
     RamseteCommand pathOne = getRamseteCommand(
         TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
-    return pathOne;
+    return pathOne.andThen(drivetrain::stop, drivetrain);
   }
 
   /**
