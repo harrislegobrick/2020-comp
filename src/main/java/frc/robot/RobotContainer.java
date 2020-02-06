@@ -89,9 +89,9 @@ public class RobotContainer {
   public Command getAutonOne() throws IOException {
     // add trajectory to follow
     RamseteCommand goToTrench = getRamseteCommand(
-        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/GoToTrench.wpilib.json")));
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/GoToTrench.wpilib.json")));
     RamseteCommand trenchRun = getRamseteCommand(
-        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/RunTrench.wpilib.json")));
 
     return new InstantCommand(limelight::setTracking, limelight)
         .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
@@ -107,7 +107,7 @@ public class RobotContainer {
    */
   public Command getTestCommand() throws IOException {
     RamseteCommand pathOne = getRamseteCommand(
-        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/RunTrench.wpilib.json")));
+        TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/RunTrench.wpilib.json")));
     return pathOne.andThen(drivetrain::stop, drivetrain);
   }
 
