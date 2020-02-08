@@ -45,7 +45,7 @@ public final class Constants {
         public static final int PID_SLOT = 0;
 
         public static final double VOLTAGE_COMP_SATURATION = 12;
-        public static final boolean VOLTAGE_COMP_ENABLED = true;
+        public static final boolean VOLTAGE_COMP_ENABLED = false;
 
         // will need characterization to find values
         public static final double S_VOLTS = 0.675;
@@ -54,7 +54,7 @@ public final class Constants {
 
         public static final double MAX_SPEED_METERS_PER_SECOND = 5;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 2;
-        public static final double P_DRIVE_VEL = 14.1;
+        public static final double P_DRIVE_VEL = 10.0;
     }
 
     public static final class kJoySticks {
