@@ -115,11 +115,11 @@ public class RobotContainer {
    * @return : the command to drive straight
    */
   public Command getTestCommand() {
-    String trajectoryJSON = "paths/RunTrench.wpilib.json";
+    String trajectoryJSON = "paths/GoToTrench.wpilib.json";
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      RamseteCommand pathOne = getRamseteCommand(trajectory);
+      RamseteCommand pathOne = getRamseteCommand(trajectory.transformBy(drivetrain.getPose().minus(trajectory.getInitialPose())));
       return pathOne.andThen(() -> drivetrain.driveVolts(0, 0));
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
