@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -109,5 +111,15 @@ public final class Constants {
     public static final class kBelts {
         public static final int MOTOR = 6;
         public static final boolean INVERTED = false;
+    }
+
+    public static final class kFieldPositions {
+        public static final Pose2d TRENCH_TWO = new Pose2d(9.311, -0.726, Rotation2d.fromDegrees(180));
+        public static final Pose2d SHEILD_TWO = new Pose2d(9.739, -5.095, Rotation2d.fromDegrees(100));
+        public static final Pose2d SHEILD_TWO_RUNUP = new Pose2d(10.339, -6.037, Rotation2d.fromDegrees(120));
+        public static final Pose2d SHOOTING_POS = new Pose2d(12.909, -5.815, Rotation2d.fromDegrees(180));
+        public static final Pose2d TRENCH_RUNUP = new Pose2d(11.024, -7.494, Rotation2d.fromDegrees(180));
+        public static final Pose2d TRENCH_END = new Pose2d(7.255, -7.494, Rotation2d.fromDegrees(180));
+        public static final Pose2d CITRUS_START = new Pose2d(12.909, -0.761, Rotation2d.fromDegrees(180));
     }
 }
