@@ -74,10 +74,7 @@ public final class Constants {
         public static final double h2 = 6.77083; // height of the target (in feet)
     }
 
-    public static final class kTurret {
-        public static final int MOTOR = 5;
-        public static final boolean INVERTED = false;
-        // WILL NEED TUNING
+    public static final class kTurn {
         public static final double kP = 0.05;
         public static final double kI = 0;
         public static final double kD = 0;
@@ -110,6 +107,9 @@ public final class Constants {
     public static final class kBelts {
         public static final int MOTOR = 6;
         public static final boolean INVERTED = false;
+        public static final int ULTRASONIC = 0;
+        public static final double VALUE_TO_INCHES = 0.125;
+        public static final double INCH_OFFSET = 0;
     }
 
     public static final class kFieldPositions {
