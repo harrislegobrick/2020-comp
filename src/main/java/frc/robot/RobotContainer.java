@@ -24,8 +24,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -43,7 +43,6 @@ public class RobotContainer {
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final Limelight limelight = new Limelight();
-  private final Turret turret = new Turret(limelight);
   private final Intake intake = new Intake();
   private final Flywheel flywheel = new Flywheel();
   private final Belts belts = new Belts();
@@ -64,21 +63,16 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new POVButton(rJoy, kJoySticks.POV_RIGHT).whenPressed(new RunCommand(turret::turnRight, turret))
-        .whenReleased(turret::stop, turret);
-    new POVButton(rJoy, kJoySticks.POV_LEFT).whenPressed(new RunCommand(turret::turnLeft, turret))
-        .whenReleased(turret::stop, turret);
-
-    new POVButton(rJoy, kJoySticks.POV_UP).whenPressed(turret::enable, turret);
-    new POVButton(rJoy, kJoySticks.POV_DOWN).whenPressed(turret::disable, turret);
-
     new POVButton(lJoy, kJoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(lJoy, kJoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
-    new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake));
+    new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, belts));
     new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
-    new JoystickButton(lJoy, 2).whenPressed(drivetrain::zeroEncoders, drivetrain);
-    new JoystickButton(lJoy, 3).whenPressed(drivetrain::resetGyro, drivetrain);
+    new JoystickButton(lJoy, 4)
+        .whileActiveOnce(new InstantCommand(limelight::setTracking, limelight)
+            .andThen(new PIDCommand(new PIDController(kTurn.kP, kTurn.kI, kTurn.kD), limelight::getX, 0.0,
+                (output) -> drivetrain.drive(0.1 - output, 0.1 + output), drivetrain)))
+        .whenInactive(limelight::setDriving, limelight);
   }
 
   /**
@@ -100,8 +94,8 @@ public class RobotContainer {
 
       return new InstantCommand(limelight::setTracking, limelight)
           .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
-          .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench)
-          .andThen(trenchRun.raceWith(new DeployIntakeCommand(intake)).andThen(() -> drivetrain.driveVolts(0, 0)));
+          .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench).andThen(
+              trenchRun.raceWith(new DeployIntakeCommand(intake, belts)).andThen(() -> drivetrain.driveVolts(0, 0)));
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectorys: " + goToTrenchJSON + " " + runTrenchJSON,
           ex.getStackTrace());
@@ -119,7 +113,8 @@ public class RobotContainer {
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      RamseteCommand pathOne = getRamseteCommand(trajectory.transformBy(drivetrain.getPose().minus(trajectory.getInitialPose())));
+      RamseteCommand pathOne = getRamseteCommand(
+          trajectory.transformBy(drivetrain.getPose().minus(trajectory.getInitialPose())));
       return pathOne.andThen(() -> drivetrain.driveVolts(0, 0));
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
