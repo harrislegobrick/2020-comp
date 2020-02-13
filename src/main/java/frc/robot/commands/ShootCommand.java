@@ -25,7 +25,7 @@ public class ShootCommand extends CommandBase {
     this.flywheel = flywheel;
     this.limelight = limelight;
     this.belts = belts;
-    addRequirements(flywheel);
+    addRequirements(flywheel, belts);
   }
 
   // Called when the command is initially scheduled.
