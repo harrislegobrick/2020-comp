@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
     public static final class kDrivetrain {
-        public static final double GEAR_RATIO = 10.71;
         public static final int WHEEL_SIZE_INCH = 6;
         public static final int HUNDRED_MS_TO_SECONDS_CONVERSION = 10;
         public static final double TICKS_TO_METERS = (1.0 / 4096) * (WHEEL_SIZE_INCH * Math.PI)
@@ -54,9 +53,9 @@ public final class Constants {
         public static final double V_VOLTS_SECOND_PER_METER = 3.15;
         public static final double A_VOLT_SEONDS_SQUARED_PER_METER = 0.404;
 
-        public static final double MAX_SPEED_METERS_PER_SECOND = 5;
-        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 2;
-        public static final double P_DRIVE_VEL = 10.0;
+        public static final double MAX_SPEED_METERS_PER_SECOND = 1;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
+        public static final double P_DRIVE_VEL = 11.0;
     }
 
     public static final class kJoySticks {
