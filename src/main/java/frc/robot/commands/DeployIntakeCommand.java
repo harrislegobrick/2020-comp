@@ -14,7 +14,6 @@ import frc.robot.subsystems.Intake;
 public class DeployIntakeCommand extends CommandBase {
   private Intake intake;
   private Belts belts;
-  // TODO : run the belts while there isn't anything blocking the ultrasonic sensor
 
   /**
    * Creates a new DeployIntake.

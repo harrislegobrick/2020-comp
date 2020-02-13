@@ -16,7 +16,6 @@ import frc.robot.Constants.kBelts;
 
 public class Belts extends SubsystemBase {
   private final WPI_VictorSPX motor;
-  // TODO : add ultra sonic sensor to this class
 
   /**
    * Creates a new Belts.
