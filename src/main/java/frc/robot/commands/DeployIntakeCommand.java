@@ -8,10 +8,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Belts;
 import frc.robot.subsystems.Intake;
 
 public class DeployIntakeCommand extends CommandBase {
   private Intake intake;
+  private Belts belts;
   // TODO : run the belts while there isn't anything blocking the ultrasonic sensor
 
   /**
@@ -21,10 +23,10 @@ public class DeployIntakeCommand extends CommandBase {
    * seconds desired
    * </p>
    */
-  public DeployIntakeCommand(Intake intake) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public DeployIntakeCommand(Intake intake, Belts belts) {
     this.intake = intake;
-    addRequirements(intake);
+    this.belts = belts;
+    addRequirements(intake, belts);
   }
 
   // Called when the command is initially scheduled.
@@ -37,12 +39,14 @@ public class DeployIntakeCommand extends CommandBase {
   @Override
   public void execute() {
     intake.run();
+    belts.run();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     intake.stop();
+    belts.stop();
     intake.retractIntake();
   }
 
