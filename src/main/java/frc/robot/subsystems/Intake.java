@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
    */
   public Intake() {
     motor = new VictorSPX(kIntake.MOTOR);
-    intake = new DoubleSolenoid(kIntake.INTAKE_FORWARD, kIntake.INTAKE_REVERSE);
+    intake = new DoubleSolenoid(kIntake.FWD_REV_SOLINOID[0], kIntake.FWD_REV_SOLINOID[1]);
 
     intake.set(Value.kReverse);
 
