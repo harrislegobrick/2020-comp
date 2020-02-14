@@ -95,8 +95,7 @@ public final class Constants {
         public static final int MOTOR = 5;
         public static final boolean INVERTED = true;
 
-        public static final int INTAKE_FORWARD = 0;
-        public static final int INTAKE_REVERSE = 1;
+        public static final int[] FWD_REV_SOLINOID = { 0, 1 };
     }
 
     public static final class kColorWheel {
@@ -107,9 +106,12 @@ public final class Constants {
     public static final class kBelts {
         public static final int MOTOR = 6;
         public static final boolean INVERTED = false;
-        public static final int ULTRASONIC = 0;
-        public static final double VALUE_TO_INCHES = 0.125;
-        public static final double INCH_OFFSET = 0;
+    }
+
+    public static final class kClimb {
+        public static final int MOTOR = 7;
+        public static final boolean INVERTED = false;
+        public static final int[] FWD_REV_SOLINOID = { 2, 3 };
     }
 
     public static final class kFieldPositions {

@@ -46,6 +46,7 @@ public class RobotContainer {
   private final Intake intake = new Intake();
   private final Flywheel flywheel = new Flywheel();
   private final Belts belts = new Belts();
+  private final Climb climb = new Climb();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -63,16 +64,24 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // manual limelight toggle on left stick's nub
     new POVButton(lJoy, kJoySticks.POV_UP).whenPressed(limelight::setTracking, limelight);
     new POVButton(lJoy, kJoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
+    // intake and shooting on joystick triggers
     new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, belts));
     new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
+
+    // limelight auto adjust on left joystick button closest to driverstation on top
     new JoystickButton(lJoy, 4)
         .whileActiveOnce(new InstantCommand(limelight::setTracking, limelight)
             .andThen(new PIDCommand(new PIDController(kTurn.kP, kTurn.kI, kTurn.kD), limelight::getX, 0.0,
                 (output) -> drivetrain.drive(0.1 - output, 0.1 + output), drivetrain)))
         .whenInactive(limelight::setDriving, limelight);
+
+    // climbing on far top buttons for left and right and right middle bottom button
+    new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(climb::deploy, climb);
+    new JoystickButton(rJoy, 6).whileActiveContinuous(climb::run, climb).whenInactive(climb::stop, climb);
   }
 
   /**
