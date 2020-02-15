@@ -32,10 +32,11 @@ public class Limelight extends SubsystemBase {
   }
 
   public void toggleTracking() {
-    if (tracking)
+    if (tracking) {
       setDriving();
-    else
+    } else {
       setTracking();
+    }
   }
 
   public void setTracking() {
@@ -48,35 +49,54 @@ public class Limelight extends SubsystemBase {
     table.getEntry("ledMode").setNumber(1.0);
     table.getEntry("camMode").setNumber(1.0);
     tracking = false;
-    // set turret angle 0.
   }
 
+  /**
+   * @return Horizontal Offset From Crosshair To Target (-29.8 to 29.8 degrees)
+   */
   public double getX() {
     return table.getEntry("tx").getDouble(0.0);
   }
 
+  /**
+   * @return Vertical Offset From Crosshair To Target (-24.85 to 24.85 degrees)
+   */
   public double getY() {
     return table.getEntry("ty").getDouble(0.0);
   }
 
+  /** @return Skew or rotation (-90 degrees to 0 degrees) */
   public double getSkew() {
     return table.getEntry("ts").getDouble(0.0);
   }
 
+  /**
+   * @return Target Area (0% of image to 100% of image)
+   */
   public double getArea() {
     return table.getEntry("ta").getDouble(0.0);
   }
 
+  /**
+   * @return Results of a 3D position solution, 6 numbers: Translation (x,y,y)
+   *         Rotation(pitch,yaw,roll)
+   */
   public double[] getPos() {
     double[] pos = new double[6];
     pos = table.getEntry("camtran").getDoubleArray(pos);
     return pos;
   }
 
-  public boolean targetLock() {
+  /**
+   * @return Whether the limelight has any valid targets
+   */
+  public boolean getTarget() {
     return table.getEntry("tv").getDouble(0.0) == 1;
   }
 
+  /**
+   * @return Whether the limelight is detected by the robot
+   */
   public boolean detected() {
     return table.getEntry("tl").getDouble(-1) > 0;
   }
