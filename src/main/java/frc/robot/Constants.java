@@ -75,7 +75,7 @@ public final class Constants {
     }
 
     public static final class kTurn {
-        public static final double kP = 0.05;
+        public static final double kP = 0.02;
         public static final double kI = 0;
         public static final double kD = 0;
     }
@@ -111,6 +111,8 @@ public final class Constants {
     public static final class kClimb {
         public static final int MOTOR = 7;
         public static final boolean INVERTED = false;
+        // (1 / CPR) * (gear ratio) * (circumfrence in inches) * (inch to feet)
+        public static final double CONVERSION_FACTOR = (1 / 42) * (10 / 1) * (Math.PI * 2) * (1 / 12);
         public static final int[] FWD_REV_SOLINOID = { 2, 3 };
     }
 
