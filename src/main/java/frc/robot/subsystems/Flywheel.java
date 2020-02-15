@@ -13,12 +13,17 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kFlywheel;;
+import frc.robot.Constants.kFlywheel;
 
 public class Flywheel extends SubsystemBase {
   private final CANSparkMax motor;
   private final CANPIDController pController;
+
+  private int cellsShot;
+  private boolean controllerEnabled = false;
+  private boolean dip = true;
 
   /**
    * Creates a new Flywheel.
@@ -44,19 +49,34 @@ public class Flywheel extends SubsystemBase {
    * @param velocity : The velocity to set the motor to.
    */
   public void setVelocity(double velocity) {
+    controllerEnabled = true;
+    dip = true;
     pController.setReference(velocity, ControlType.kVelocity);
   }
 
-  public double getVelocity(){
+  public double getVelocity() {
     return motor.getEncoder().getVelocity();
   }
 
   public void stop() {
+    controllerEnabled = false;
     motor.set(0);
+  }
+
+  public int getCellsShotCount() {
+    return cellsShot;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (controllerEnabled && getVelocity() > 3900 && dip) {
+      dip = false;
+    }
+    if (controllerEnabled && getVelocity() < 3800 && !dip) {
+      cellsShot++;
+      dip = true;
+    }
+    SmartDashboard.putNumber("Cells Shot", cellsShot);
   }
 }

@@ -20,15 +20,21 @@ public class ShootCommand extends CommandBase {
   private final Belts belts;
   private double delay = 0.5;
   private double initTime;
+  private int powerCellsToShoot;
+  private int initCellCount;
 
   /**
    * Creates a new ShootCommand.
    */
   public ShootCommand(Flywheel flywheel, Limelight limelight, Belts belts) {
-    // Use addRequirements() here to declare subsystem dependencies.
+    this(-1, flywheel, limelight, belts);
+  }
+
+  public ShootCommand(int powerCellsToShoot, Flywheel flywheel, Limelight limelight, Belts belts) {
     this.flywheel = flywheel;
     this.limelight = limelight;
     this.belts = belts;
+    this.powerCellsToShoot = powerCellsToShoot;
     addRequirements(flywheel, belts);
   }
 
@@ -36,6 +42,7 @@ public class ShootCommand extends CommandBase {
   @Override
   public void initialize() {
     initTime = getFPGATimestamp();
+    initCellCount = flywheel.getCellsShotCount();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -72,6 +79,10 @@ public class ShootCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (powerCellsToShoot > 0) {
+      return flywheel.getCellsShotCount() == (initCellCount + powerCellsToShoot);
+    } else {
+      return false;
+    }
   }
 }
