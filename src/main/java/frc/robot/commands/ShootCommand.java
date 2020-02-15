@@ -24,12 +24,24 @@ public class ShootCommand extends CommandBase {
   private int initCellCount;
 
   /**
-   * Creates a new ShootCommand.
+   * Shoots untill the command is canceled
+   * 
+   * @param flywheel  flywheel
+   * @param limelight limelight
+   * @param belts     belts
    */
   public ShootCommand(Flywheel flywheel, Limelight limelight, Belts belts) {
-    this(-1, flywheel, limelight, belts);
+    this(-10, flywheel, limelight, belts);
   }
 
+  /**
+   * Shoots untill the entered number of shots have been shot
+   * 
+   * @param powerCellsToShoot the number of shots to shoot
+   * @param flywheel          flywheel
+   * @param limelight         limelight
+   * @param belts             belts
+   */
   public ShootCommand(int powerCellsToShoot, Flywheel flywheel, Limelight limelight, Belts belts) {
     this.flywheel = flywheel;
     this.limelight = limelight;
@@ -43,23 +55,25 @@ public class ShootCommand extends CommandBase {
   public void initialize() {
     initTime = getFPGATimestamp();
     initCellCount = flywheel.getCellsShotCount();
+    flywheel.setControllerEnabled();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     // 4000 / 15 = 267 so multiply distance by 267 to get RPM?
+    double velocity = 267 * limelight.getDistance();
+
     if (getFPGATimestamp() > (initTime + (delay / 4))) {
       if (limelight.getDistance() > 5) {
-        flywheel.setVelocity(267 * limelight.getDistance());
+        flywheel.setVelocity(velocity);
       } else {
         flywheel.setVelocity(4000);
       }
     }
 
     if (getFPGATimestamp() > (initTime + delay)) {
-      if (flywheel.getVelocity() > 3900) {
+      if (flywheel.getVelocity() > velocity * 0.95) {
         belts.run();
       } else {
         belts.stop();

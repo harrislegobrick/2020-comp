@@ -24,6 +24,7 @@ public class Flywheel extends SubsystemBase {
   private int cellsShot;
   private boolean controllerEnabled = false;
   private boolean dip = true;
+  private double velocity;
 
   /**
    * Creates a new Flywheel.
@@ -49,9 +50,13 @@ public class Flywheel extends SubsystemBase {
    * @param velocity : The velocity to set the motor to.
    */
   public void setVelocity(double velocity) {
+    this.velocity = velocity;
+    pController.setReference(velocity, ControlType.kVelocity);
+  }
+
+  public void setControllerEnabled() {
     controllerEnabled = true;
     dip = true;
-    pController.setReference(velocity, ControlType.kVelocity);
   }
 
   public double getVelocity() {
@@ -60,7 +65,7 @@ public class Flywheel extends SubsystemBase {
 
   public void stop() {
     controllerEnabled = false;
-    motor.set(0);
+    pController.setReference(0, ControlType.kVelocity);
   }
 
   public int getCellsShotCount() {
@@ -70,10 +75,10 @@ public class Flywheel extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (controllerEnabled && getVelocity() > 3900 && dip) {
+    if (controllerEnabled && getVelocity() > (velocity * 0.98) && dip) {
       dip = false;
     }
-    if (controllerEnabled && getVelocity() < 3800 && !dip) {
+    if (controllerEnabled && getVelocity() < (velocity * 0.95) && !dip) {
       cellsShot++;
       dip = true;
     }
