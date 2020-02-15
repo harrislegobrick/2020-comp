@@ -36,6 +36,10 @@ public class Belts extends SubsystemBase {
     motor.set(ControlMode.PercentOutput, 0);
   }
 
+  public void reverse() {
+    motor.set(ControlMode.PercentOutput, -0.1);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
