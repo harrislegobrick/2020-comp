@@ -24,7 +24,6 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -73,15 +72,11 @@ public class RobotContainer {
     new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
 
     // limelight auto adjust on left joystick button closest to driverstation on top
-    new JoystickButton(lJoy, 4)
-        .whileActiveOnce(new InstantCommand(limelight::setTracking, limelight)
-            .andThen(new PIDCommand(new PIDController(kTurn.kP, kTurn.kI, kTurn.kD), limelight::getX, 0.0,
-                (output) -> drivetrain.drive(0.1 - output, 0.1 + output), drivetrain)))
-        .whenInactive(limelight::setDriving, limelight);
+    new JoystickButton(lJoy, 4).whenHeld(new LimelightTurnToAngleCommand(drivetrain, limelight));
 
     // climbing on far top buttons for left and right and right middle bottom button
     new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(climb::deploy, climb);
-    new JoystickButton(rJoy, 6).whileActiveContinuous(climb::run, climb).whenInactive(climb::stop, climb);
+    new JoystickButton(rJoy, 6).whileHeld(climb::run, climb).whenInactive(climb::stop, climb);
   }
 
   /**
