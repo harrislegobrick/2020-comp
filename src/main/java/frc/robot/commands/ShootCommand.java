@@ -55,7 +55,6 @@ public class ShootCommand extends CommandBase {
   public void initialize() {
     initTime = getFPGATimestamp();
     initCellCount = flywheel.getCellsShotCount();
-    flywheel.setControllerEnabled();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

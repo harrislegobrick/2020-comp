@@ -21,10 +21,8 @@ public class Flywheel extends SubsystemBase {
   private final CANSparkMax motor;
   private final CANPIDController pController;
 
-  private int cellsShot;
-  private boolean controllerEnabled = false;
+  private int cellsShot = 0;
   private boolean dip = true;
-  private double velocity;
 
   /**
    * Creates a new Flywheel.
@@ -50,13 +48,14 @@ public class Flywheel extends SubsystemBase {
    * @param velocity : The velocity to set the motor to.
    */
   public void setVelocity(double velocity) {
-    this.velocity = velocity;
     pController.setReference(velocity, ControlType.kVelocity);
-  }
-
-  public void setControllerEnabled() {
-    controllerEnabled = true;
-    dip = true;
+    if (getVelocity() > (velocity * 0.98) && dip) {
+      dip = false;
+    }
+    if (getVelocity() < (velocity * 0.95) && !dip) {
+      cellsShot++;
+      dip = true;
+    }
   }
 
   public double getVelocity() {
@@ -64,8 +63,8 @@ public class Flywheel extends SubsystemBase {
   }
 
   public void stop() {
-    controllerEnabled = false;
     pController.setReference(0, ControlType.kVelocity);
+    dip = true;
   }
 
   public int getCellsShotCount() {
@@ -75,13 +74,6 @@ public class Flywheel extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (controllerEnabled && getVelocity() > (velocity * 0.98) && dip) {
-      dip = false;
-    }
-    if (controllerEnabled && getVelocity() < (velocity * 0.95) && !dip) {
-      cellsShot++;
-      dip = true;
-    }
     SmartDashboard.putNumber("Cells Shot", cellsShot);
   }
 }
