@@ -7,9 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -56,6 +59,15 @@ public final class Constants {
         public static final double MAX_SPEED_METERS_PER_SECOND = 1;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.5;
         public static final double P_DRIVE_VEL = 11.0;
+
+        public static final double MAX_VOLTAGE = 10;
+        public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+                new SimpleMotorFeedforward(S_VOLTS, V_VOLTS_SECOND_PER_METER, A_VOLT_SEONDS_SQUARED_PER_METER),
+                DRIVE_KINEMATICS, MAX_VOLTAGE);
+        public static final TrajectoryConfig CONFIG = new TrajectoryConfig(MAX_SPEED_METERS_PER_SECOND,
+                MAX_ACCELERATION_METERS_PER_SECOND_SQUARED).setKinematics(DRIVE_KINEMATICS)
+                        .addConstraint(autoVoltageConstraint);
+
     }
 
     public static final class kJoySticks {
@@ -121,7 +133,7 @@ public final class Constants {
         public static final Pose2d TRENCH_TWO = new Pose2d(9.311, -0.726, Rotation2d.fromDegrees(180));
         public static final Pose2d SHEILD_TWO = new Pose2d(9.739, -5.095, Rotation2d.fromDegrees(100));
         public static final Pose2d SHEILD_TWO_RUNUP = new Pose2d(10.339, -6.037, Rotation2d.fromDegrees(120));
-        public static final Pose2d SHOOTING_POS = new Pose2d(12.909, -5.815, Rotation2d.fromDegrees(180));
+        public static final Pose2d SHOOTING_POS = new Pose2d(13, -5.8, Rotation2d.fromDegrees(180));
         public static final Pose2d TRENCH_RUNUP = new Pose2d(11.024, -7.494, Rotation2d.fromDegrees(180));
         public static final Pose2d TRENCH_END = new Pose2d(7.255, -7.494, Rotation2d.fromDegrees(180));
         public static final Pose2d CITRUS_START = new Pose2d(12.909, -0.761, Rotation2d.fromDegrees(180));
