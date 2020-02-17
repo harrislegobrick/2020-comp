@@ -40,6 +40,7 @@ public class LimelightTurnToAngleCommand extends PIDCommand {
 
   @Override
   public void initialize() {
+    limelight.setTracking();
     super.initialize();
     limelight.setTracking();
   }
