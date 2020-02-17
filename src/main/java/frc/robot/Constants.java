@@ -100,17 +100,17 @@ public final class Constants {
     }
 
     public static final class kColorWheel {
-        public static final int MOTOR = 0;
+        public static final int MOTOR = 9;
         public static final boolean INVERTED = false;
     }
 
     public static final class kBelts {
-        public static final int MOTOR = 6;
+        public static final int MOTOR = 7;
         public static final boolean INVERTED = false;
     }
 
     public static final class kClimb {
-        public static final int MOTOR = 7;
+        public static final int MOTOR = 8;
         public static final boolean INVERTED = false;
         // (1 / CPR) * (gear ratio) * (circumfrence in inches) * (inch to feet)
         public static final double CONVERSION_FACTOR = (1 / 42) * (10 / 1) * (Math.PI * 2) * (1 / 12);
