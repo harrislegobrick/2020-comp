@@ -9,6 +9,8 @@ package frc.robot;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.robot.Constants.*;
@@ -128,15 +131,23 @@ public class RobotContainer {
   }
 
   public Command getSixBallAutoCommand() {
-    Trajectory goToTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.SHOOTING_POS, null,
-        kFieldPositions.TRENCH_RUNUP, kDrivetrain.CONFIG.setReversed(true));
+    TrajectoryConfig reversedConfig = kDrivetrain.CONFIG;
+    reversedConfig.setReversed(true);
+
+    drivetrain.setPosition(kFieldPositions.SHOOTING_POS);
+
+    Trajectory goToTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.SHOOTING_POS, List.of(),
+        kFieldPositions.TRENCH_RUNUP, reversedConfig);
     RamseteCommand goToTrench = getRamseteCommand(goToTrenchTrajectory);
-    Trajectory runTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_RUNUP, null,
-        kFieldPositions.TRENCH_END, kDrivetrain.CONFIG.setReversed(true));
+
+    Trajectory runTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_RUNUP, List.of(),
+        kFieldPositions.TRENCH_END, reversedConfig);
     RamseteCommand runTrench = getRamseteCommand(runTrenchTrajectory);
-    Trajectory returnTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_END, null,
+
+    Trajectory returnTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_END, List.of(),
         kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG);
     RamseteCommand returnToShoot = getRamseteCommand(returnTrajectory);
+
     return new InstantCommand(limelight::setTracking, limelight)
         .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5))
         .andThen(limelight::setDriving, limelight).andThen(goToTrench)
