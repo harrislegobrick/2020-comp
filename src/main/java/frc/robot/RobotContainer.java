@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
@@ -124,6 +125,23 @@ public class RobotContainer {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
     }
     return null;
+  }
+
+  public Command getSixBallAutoCommand() {
+    Trajectory goToTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.SHOOTING_POS, null,
+        kFieldPositions.TRENCH_RUNUP, kDrivetrain.CONFIG.setReversed(true));
+    RamseteCommand goToTrench = getRamseteCommand(goToTrenchTrajectory);
+    Trajectory runTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_RUNUP, null,
+        kFieldPositions.TRENCH_END, kDrivetrain.CONFIG.setReversed(true));
+    RamseteCommand runTrench = getRamseteCommand(runTrenchTrajectory);
+    Trajectory returnTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_END, null,
+        kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG);
+    RamseteCommand returnToShoot = getRamseteCommand(returnTrajectory);
+    return new InstantCommand(limelight::setTracking, limelight)
+        .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5))
+        .andThen(limelight::setDriving, limelight).andThen(goToTrench)
+        .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts))).andThen(returnToShoot)
+        .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5));
   }
 
   /**
