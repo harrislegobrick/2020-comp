@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
     chooser.setDefaultOption("Default Auto", robotContainer.getTestCommand());
     chooser.addOption("Main Auton", robotContainer.getAutonOne());
     chooser.addOption("Test Auton", robotContainer.getTestCommand());
+    chooser.addOption("Six Baller", robotContainer.getSixBallAutoCommand());
 
     SmartDashboard.putData("Auto mode", chooser);
   }
