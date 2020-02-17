@@ -76,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
     rightMaster.enableVoltageCompensation(kDrivetrain.VOLTAGE_COMP_ENABLED);
 
     // zero sensors
-    zeroEncoders();
+    resetEncoders();
     resetGyro();
 
     SmartDashboard.putData(gyro);
@@ -95,7 +95,7 @@ public class Drivetrain extends SubsystemBase {
             * kDrivetrain.HUNDRED_MS_TO_SECONDS_CONVERSION);
   }
 
-  public void zeroEncoders() {
+  public void resetEncoders() {
     leftMaster.setSelectedSensorPosition(0);
     rightMaster.setSelectedSensorPosition(0);
   }
@@ -130,6 +130,16 @@ public class Drivetrain extends SubsystemBase {
 
   public Pose2d getPose() {
     return odometry.getPoseMeters();
+  }
+
+  public void setPosition(Pose2d poseMeters) {
+    resetEncoders();
+    odometry.resetPosition(poseMeters, Rotation2d.fromDegrees(getHeading()));
+  }
+
+  public void setPosition(double x, double y, double degrees) {
+    resetEncoders();
+    odometry.resetPosition(new Pose2d(x, y, Rotation2d.fromDegrees(degrees)), Rotation2d.fromDegrees(getHeading()));
   }
 
   @Override
