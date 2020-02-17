@@ -36,13 +36,13 @@ public class LimelightTurnToAngleCommand extends PIDCommand {
     addRequirements(drivetrain, limelight);
     this.limelight = limelight;
     this.drivetrain = drivetrain;
+    getController().setTolerance(kTurn.TOLERANCE);
   }
 
   @Override
   public void initialize() {
     limelight.setTracking();
     super.initialize();
-    limelight.setTracking();
   }
 
   @Override
