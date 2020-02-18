@@ -29,6 +29,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -79,8 +80,15 @@ public class RobotContainer {
     new JoystickButton(lJoy, 4).whenHeld(new LimelightTurnToAngleCommand(drivetrain, limelight));
 
     // climbing on far top buttons for left and right and right middle bottom button
-    new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(climb::deploy, climb);
+    new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(
+        new InstantCommand(climb::deploy, climb).andThen(new WaitCommand(2)).andThen(climb::release, climb));
     new JoystickButton(rJoy, 6).whileHeld(climb::run, climb).whenInactive(climb::stop, climb);
+
+    // return to shooting position
+    new JoystickButton(lJoy, 6)
+        .whenHeld(getRamseteCommand(TrajectoryGenerator.generateTrajectory(drivetrain.getPose(), List.of(),
+            kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG)).andThen(() -> drivetrain.driveVolts(0, 0), drivetrain))
+        .whenInactive(() -> drivetrain.driveVolts(0, 0), drivetrain);
   }
 
   /**
