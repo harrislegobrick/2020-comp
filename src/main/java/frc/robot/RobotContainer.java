@@ -16,9 +16,6 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -84,11 +81,15 @@ public class RobotContainer {
         new InstantCommand(climb::deploy, climb).andThen(new WaitCommand(2)).andThen(climb::release, climb));
     new JoystickButton(rJoy, 6).whileHeld(climb::run, climb).whenInactive(climb::stop, climb);
 
-    // return to shooting position
-    new JoystickButton(lJoy, 6)
-        .whenHeld(getRamseteCommand(TrajectoryGenerator.generateTrajectory(drivetrain.getPose(), List.of(),
-            kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG)).andThen(() -> drivetrain.driveVolts(0, 0), drivetrain))
-        .whenInactive(() -> drivetrain.driveVolts(0, 0), drivetrain);
+    // return to shooting position (I have no idea if this will work, uncomment
+    // later once everything else is tested)
+    /*
+     * new JoystickButton(lJoy, 6) .whenHeld( new InstantCommand(() -> new
+     * MakeRamseteCommand(TrajectoryGenerator.generateTrajectory(drivetrain.getPose(
+     * ), List.of(), kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG), drivetrain))
+     * .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)) .whenInactive(() ->
+     * drivetrain.driveVolts(0, 0), drivetrain);
+     */
   }
 
   /**
@@ -105,8 +106,8 @@ public class RobotContainer {
 
       Trajectory goToTrenchTrajectory = TrajectoryUtil.fromPathweaverJson(goToTrenchPath);
       Trajectory runTrenchTrajectory = TrajectoryUtil.fromPathweaverJson(runTrenchPath);
-      RamseteCommand goToTrench = getRamseteCommand(goToTrenchTrajectory);
-      RamseteCommand trenchRun = getRamseteCommand(runTrenchTrajectory);
+      RamseteCommand goToTrench = new MakeRamseteCommand(goToTrenchTrajectory, drivetrain);
+      RamseteCommand trenchRun = new MakeRamseteCommand(runTrenchTrajectory, drivetrain);
 
       return new InstantCommand(limelight::setTracking, limelight)
           .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
@@ -129,8 +130,8 @@ public class RobotContainer {
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      RamseteCommand pathOne = getRamseteCommand(
-          trajectory.transformBy(drivetrain.getPose().minus(trajectory.getInitialPose())));
+      RamseteCommand pathOne = new MakeRamseteCommand(
+          trajectory.transformBy(drivetrain.getPose().minus(trajectory.getInitialPose())), drivetrain);
       return pathOne.andThen(() -> drivetrain.driveVolts(0, 0));
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
@@ -146,34 +147,20 @@ public class RobotContainer {
 
     Trajectory goToTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.SHOOTING_POS, List.of(),
         kFieldPositions.TRENCH_RUNUP, reversedConfig);
-    RamseteCommand goToTrench = getRamseteCommand(goToTrenchTrajectory);
+    RamseteCommand goToTrench = new MakeRamseteCommand(goToTrenchTrajectory, drivetrain);
 
     Trajectory runTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_RUNUP, List.of(),
         kFieldPositions.TRENCH_END, reversedConfig);
-    RamseteCommand runTrench = getRamseteCommand(runTrenchTrajectory);
+    RamseteCommand runTrench = new MakeRamseteCommand(runTrenchTrajectory, drivetrain);
 
     Trajectory returnTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_END, List.of(),
         kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG);
-    RamseteCommand returnToShoot = getRamseteCommand(returnTrajectory);
+    RamseteCommand returnToShoot = new MakeRamseteCommand(returnTrajectory, drivetrain);
 
     return new InstantCommand(limelight::setTracking, limelight)
         .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5))
         .andThen(limelight::setDriving, limelight).andThen(goToTrench)
         .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts))).andThen(returnToShoot)
         .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5));
-  }
-
-  /**
-   * Wrapper for following a trajectory
-   * 
-   * @param trajectory : trajectory to follow
-   * @return a command that will follow a given path
-   */
-  private RamseteCommand getRamseteCommand(Trajectory trajectory) {
-    return new RamseteCommand(trajectory, drivetrain::getPose, new RamseteController(),
-        new SimpleMotorFeedforward(kDrivetrain.S_VOLTS, kDrivetrain.V_VOLTS_SECOND_PER_METER,
-            kDrivetrain.A_VOLT_SEONDS_SQUARED_PER_METER),
-        kDrivetrain.DRIVE_KINEMATICS, drivetrain::getWheelSpeeds, new PIDController(kDrivetrain.P_DRIVE_VEL, 0, 0),
-        new PIDController(kDrivetrain.P_DRIVE_VEL, 0, 0), drivetrain::driveVolts, drivetrain);
   }
 }
