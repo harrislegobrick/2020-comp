@@ -7,37 +7,37 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kBelts;
 
 public class Belts extends SubsystemBase {
-  private final WPI_VictorSPX motor;
+  private final CANSparkMax motor;
 
   /**
    * Creates a new Belts.
    */
   public Belts() {
-    motor = new WPI_VictorSPX(kBelts.MOTOR);
+    motor = new CANSparkMax(kBelts.MOTOR, MotorType.kBrushed);
 
-    motor.configFactoryDefault();
+    motor.restoreFactoryDefaults();
     motor.setInverted(kBelts.INVERTED);
-    motor.setNeutralMode(NeutralMode.Brake);
+    motor.setIdleMode(IdleMode.kBrake);
   }
 
   public void run() {
-    motor.set(ControlMode.PercentOutput, 0.2);
+    motor.set(0.2);
   }
 
   public void stop() {
-    motor.set(ControlMode.PercentOutput, 0);
+    motor.set(0);
   }
 
   public void reverse() {
-    motor.set(ControlMode.PercentOutput, -0.1);
+    motor.set(-0.1);
   }
 
   @Override
