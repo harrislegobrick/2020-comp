@@ -23,6 +23,7 @@ public class Limelight extends SubsystemBase {
   public Limelight() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
     setDriving();
+    SmartDashboard.putBoolean("limelight detected", detected());
   }
 
   /** @return should return distance in feet from the base of the power port */
@@ -108,6 +109,5 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("limelight detected", detected());
   }
 }
