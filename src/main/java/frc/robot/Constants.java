@@ -102,6 +102,8 @@ public final class Constants {
         public static final double kD = 0.0007;
         public static final double kFF = 0.000175;
         public static final double kIZone = 0.0001;
+
+        public static final double RPM = 4000;
     }
 
     public static final class kIntake {

@@ -29,10 +29,14 @@ public class Limelight extends SubsystemBase {
   /** @return should return distance in feet from the base of the power port */
   public double getDistance() {
     try {
-      double d = (kLimelight.h2 - kLimelight.h1) / Math.tan(Math.toRadians(kLimelight.a1 + getY()));
-      return d;
+      if (getTarget()) {
+        double d = (kLimelight.h2 - kLimelight.h1) / Math.tan(Math.toRadians(kLimelight.a1 + getY()));
+        return d;
+      } else {
+        return Double.NaN;
+      }
     } catch (ArithmeticException e) {
-      return -1;
+      return Double.NaN;
     }
   }
 
@@ -64,10 +68,11 @@ public class Limelight extends SubsystemBase {
   }
 
   /**
-   * @return Vertical Offset From Crosshair To Target (-24.85 to 24.85 degrees)
+   * @return Vertical Offset From Crosshair To Target (-24.85 to 24.85 degrees) or
+   *         {@code NaN} if it doesn't find a target
    */
   public double getY() {
-    return table.getEntry("ty").getDouble(0.0);
+    return table.getEntry("ty").getDouble(Double.NaN);
   }
 
   /** @return Skew or rotation (-90 degrees to 0 degrees) */
