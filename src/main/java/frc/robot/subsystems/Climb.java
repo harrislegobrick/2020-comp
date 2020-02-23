@@ -43,7 +43,9 @@ public class Climb extends SubsystemBase {
   }
 
   public void release() {
-    release.set(Value.kReverse);
+    if (extendor.get() == Value.kForward) {
+      release.set(Value.kReverse);
+    }
   }
 
   public void hold() {
