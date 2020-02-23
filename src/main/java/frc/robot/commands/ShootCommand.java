@@ -62,7 +62,8 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     // 4000 / 15 = 267 so multiply distance by 267 to get RPM?
-    double velocity = Double.isNaN(limelight.getDistance()) ? kFlywheel.RPM : 267 * limelight.getDistance();
+    double distance = limelight.getDistance();
+    double velocity = Double.isNaN(distance) ? kFlywheel.RPM : 267 * distance;
 
     if (getFPGATimestamp() > (initTime + (delay / 4))) {
       flywheel.setVelocity(velocity);
