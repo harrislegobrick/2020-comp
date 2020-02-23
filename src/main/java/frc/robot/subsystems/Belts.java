@@ -24,6 +24,7 @@ public class Belts extends SubsystemBase {
     motor = new CANSparkMax(kBelts.MOTOR, MotorType.kBrushed);
 
     motor.restoreFactoryDefaults();
+    motor.setMotorType(MotorType.kBrushed);
     motor.setInverted(kBelts.INVERTED);
     motor.setIdleMode(IdleMode.kBrake);
   }

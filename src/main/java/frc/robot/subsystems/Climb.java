@@ -30,6 +30,7 @@ public class Climb extends SubsystemBase {
     release = new DoubleSolenoid(kClimb.FWD_REV_RELEASE[0], kClimb.FWD_REV_RELEASE[1]);
 
     motor.restoreFactoryDefaults();
+    motor.setMotorType(MotorType.kBrushless);
     motor.setIdleMode(IdleMode.kBrake);
     motor.setInverted(kClimb.INVERTED);
 
