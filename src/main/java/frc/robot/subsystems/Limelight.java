@@ -11,7 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kLimelight;;
+import frc.robot.Constants.kLimelight;
 
 public class Limelight extends SubsystemBase {
   private static NetworkTable table;
