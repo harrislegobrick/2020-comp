@@ -68,11 +68,10 @@ public class Limelight extends SubsystemBase {
   }
 
   /**
-   * @return Vertical Offset From Crosshair To Target (-24.85 to 24.85 degrees) or
-   *         {@code NaN} if it doesn't find a target
+   * @return Vertical Offset From Crosshair To Target (-24.85 to 24.85 degrees)
    */
   public double getY() {
-    return table.getEntry("ty").getDouble(Double.NaN);
+    return table.getEntry("ty").getDouble(0.0);
   }
 
   /** @return Skew or rotation (-90 degrees to 0 degrees) */
@@ -98,14 +97,16 @@ public class Limelight extends SubsystemBase {
   }
 
   /**
-   * @return Whether the limelight has any valid targets
+   * @return Whether the limelight has any valid targets ({@code true} if has
+   *         target)
    */
   public boolean getTarget() {
     return table.getEntry("tv").getDouble(0.0) == 1;
   }
 
   /**
-   * @return Whether the limelight is detected by the robot
+   * @return Whether the limelight is detected by the robot ({@code true} if
+   *         detected)
    */
   public boolean detected() {
     return table.getEntry("tl").getDouble(-1) > 0;
