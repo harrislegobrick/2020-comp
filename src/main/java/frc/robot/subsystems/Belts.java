@@ -33,7 +33,7 @@ public class Belts extends SubsystemBase {
   }
 
   public void run() {
-    motor.set(0.2);
+    motor.set(0.25);
   }
 
   public void stop() {
