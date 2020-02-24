@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -25,7 +26,9 @@ public class Belts extends SubsystemBase {
 
     motor.restoreFactoryDefaults();
     motor.setInverted(kBelts.INVERTED);
+    motor.getEncoder(EncoderType.kNoSensor, 0);
     motor.setIdleMode(IdleMode.kBrake);
+    motor.burnFlash();
   }
 
   public void run() {
