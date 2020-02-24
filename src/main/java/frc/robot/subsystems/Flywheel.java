@@ -43,9 +43,6 @@ public class Flywheel extends SubsystemBase {
     pController.setIZone(kFlywheel.kIZone);
     motor.burnFlash();
 
-    
-    SmartDashboard.putNumber("Cells Shot", cellsShot);
-    SmartDashboard.putNumber("motor RPM", getVelocity());
   }
 
   /**
@@ -80,5 +77,7 @@ public class Flywheel extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Cells Shot", cellsShot);
+    SmartDashboard.putNumber("motor RPM", getVelocity());
   }
 }
