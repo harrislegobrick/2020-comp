@@ -10,6 +10,7 @@ package frc.robot.commands;
 import static edu.wpi.first.wpilibj.Timer.getFPGATimestamp;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.kFlywheel;
 import frc.robot.subsystems.Belts;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Limelight;
@@ -61,14 +62,11 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     // 4000 / 15 = 267 so multiply distance by 267 to get RPM?
-    double velocity = 267 * limelight.getDistance();
+    double distance = limelight.getDistance();
+    double velocity = Double.isNaN(distance) ? kFlywheel.RPM : 267 * distance;
 
     if (getFPGATimestamp() > (initTime + (delay / 4))) {
-      if (limelight.getDistance() > 5) {
-        flywheel.setVelocity(velocity);
-      } else {
-        flywheel.setVelocity(4000);
-      }
+      flywheel.setVelocity(velocity);
     }
 
     if (getFPGATimestamp() > (initTime + delay)) {

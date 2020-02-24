@@ -11,7 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kLimelight;;
+import frc.robot.Constants.kLimelight;
 
 public class Limelight extends SubsystemBase {
   private static NetworkTable table;
@@ -29,10 +29,14 @@ public class Limelight extends SubsystemBase {
   /** @return should return distance in feet from the base of the power port */
   public double getDistance() {
     try {
-      double d = (kLimelight.h2 - kLimelight.h1) / Math.tan(Math.toRadians(kLimelight.a1 + getY()));
-      return d;
+      if (getTarget()) {
+        double d = (kLimelight.h2 - kLimelight.h1) / Math.tan(Math.toRadians(kLimelight.a1 + getY()));
+        return d;
+      } else {
+        return Double.NaN;
+      }
     } catch (ArithmeticException e) {
-      return -1;
+      return Double.NaN;
     }
   }
 
@@ -93,14 +97,16 @@ public class Limelight extends SubsystemBase {
   }
 
   /**
-   * @return Whether the limelight has any valid targets
+   * @return Whether the limelight has any valid targets ({@code true} if has
+   *         target)
    */
   public boolean getTarget() {
     return table.getEntry("tv").getDouble(0.0) == 1;
   }
 
   /**
-   * @return Whether the limelight is detected by the robot
+   * @return Whether the limelight is detected by the robot ({@code true} if
+   *         detected)
    */
   public boolean detected() {
     return table.getEntry("tl").getDouble(-1) > 0;

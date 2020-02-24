@@ -32,6 +32,7 @@ public class Flywheel extends SubsystemBase {
     pController = motor.getPIDController();
 
     motor.restoreFactoryDefaults();
+    motor.setMotorType(MotorType.kBrushless);
     motor.setIdleMode(IdleMode.kBrake);
     motor.setInverted(kFlywheel.INVERTED);
 

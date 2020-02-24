@@ -30,6 +30,7 @@ public class Climb extends SubsystemBase {
     release = new DoubleSolenoid(kClimb.FWD_REV_RELEASE[0], kClimb.FWD_REV_RELEASE[1]);
 
     motor.restoreFactoryDefaults();
+    motor.setMotorType(MotorType.kBrushless);
     motor.setIdleMode(IdleMode.kBrake);
     motor.setInverted(kClimb.INVERTED);
 
@@ -42,7 +43,9 @@ public class Climb extends SubsystemBase {
   }
 
   public void release() {
-    release.set(Value.kReverse);
+    if (extendor.get() == Value.kForward) {
+      release.set(Value.kReverse);
+    }
   }
 
   public void hold() {
@@ -54,7 +57,7 @@ public class Climb extends SubsystemBase {
   }
 
   public void run() {
-    if (extendor.get() == Value.kForward) {
+    if (extendor.get() == Value.kForward && release.get() == Value.kReverse) {
       motor.set(1.0);
     }
   }
