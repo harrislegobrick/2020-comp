@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -149,8 +150,8 @@ public class RobotContainer {
         kFieldPositions.TRENCH_RUNUP, reversedConfig);
     RamseteCommand goToTrench = new MakeRamseteCommand(goToTrenchTrajectory, drivetrain);
 
-    Trajectory runTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_RUNUP, List.of(),
-        kFieldPositions.TRENCH_END, reversedConfig);
+    Trajectory runTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_RUNUP,
+        List.of(new Translation2d(9, -7.496)), kFieldPositions.TRENCH_END, reversedConfig);
     RamseteCommand runTrench = new MakeRamseteCommand(runTrenchTrajectory, drivetrain);
 
     Trajectory returnTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.TRENCH_END, List.of(),
