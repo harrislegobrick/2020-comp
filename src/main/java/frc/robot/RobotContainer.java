@@ -87,9 +87,9 @@ public class RobotContainer {
     /*
      * new JoystickButton(lJoy, 6) .whenHeld( new InstantCommand(() -> new
      * MakeRamseteCommand(TrajectoryGenerator.generateTrajectory(drivetrain.getPose(
-     * ), List.of(), kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG),
-     * drivetrain).schedule()) .andThen(() -> drivetrain.driveVolts(0, 0),
-     * drivetrain)) .whenInactive(() -> drivetrain.driveVolts(0, 0), drivetrain);
+     * ), List.of(), kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG), drivetrain)
+     * .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain).schedule()))
+     * .whenInactive(() -> drivetrain.driveVolts(0, 0), drivetrain);
      */
   }
 
