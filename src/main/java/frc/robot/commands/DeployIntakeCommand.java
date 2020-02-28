@@ -7,6 +7,8 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.wpilibj.Timer.getFPGATimestamp;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Belts;
 import frc.robot.subsystems.Intake;
@@ -14,6 +16,7 @@ import frc.robot.subsystems.Intake;
 public class DeployIntakeCommand extends CommandBase {
   private Intake intake;
   private Belts belts;
+  private double initTime;
 
   /**
    * Creates a new DeployIntake.
@@ -32,12 +35,15 @@ public class DeployIntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     intake.deployIntake();
+    initTime = getFPGATimestamp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.run();
+    if (getFPGATimestamp() > (initTime + 0.25)) {
+      intake.run();
+    }
     belts.run();
   }
 
