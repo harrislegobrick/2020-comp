@@ -37,10 +37,11 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-    chooser.setDefaultOption("Default Auto", robotContainer.getTestCommand());
+    chooser.setDefaultOption("Default Auto", robotContainer.getFivePointer());
     chooser.addOption("Main Auton", robotContainer.getAutonOne());
     chooser.addOption("Test Auton", robotContainer.getTestCommand());
     chooser.addOption("Six Baller", robotContainer.getSixBallAutoCommand());
+    chooser.addOption("Move off line", robotContainer.getFivePointer());
 
     SmartDashboard.putData("Auto mode", chooser);
   }

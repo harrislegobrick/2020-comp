@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
@@ -26,6 +27,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -163,5 +165,16 @@ public class RobotContainer {
         .andThen(limelight::setDriving, limelight).andThen(goToTrench)
         .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts))).andThen(returnToShoot)
         .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5));
+  }
+
+  /**
+   * Simple command to just move off the auton line forward
+   * 
+   * @return the command
+   */
+  public Command getFivePointer() {
+    double speed = 0.3;
+    return new PIDCommand(new PIDController(0.1, 0, 0), drivetrain::getHeading, 0.0,
+        (output) -> drivetrain.drive(speed - output, speed + output), drivetrain).withTimeout(2);
   }
 }
