@@ -15,16 +15,19 @@ import frc.robot.subsystems.Drivetrain;
 public class TankDrive extends CommandBase {
   private final Drivetrain driveSubsystem;
   private final DoubleSupplier left, right, throt;
+  private final boolean reversed;
 
   /**
    * Creates a new TankDrive.
    */
-  public TankDrive(DoubleSupplier left, DoubleSupplier right, DoubleSupplier throt, Drivetrain driveSubsystem) {
+  public TankDrive(DoubleSupplier left, DoubleSupplier right, DoubleSupplier throt, boolean reversed,
+      Drivetrain driveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveSubsystem = driveSubsystem;
     this.left = left;
     this.right = right;
     this.throt = throt;
+    this.reversed = reversed;
     addRequirements(driveSubsystem);
   }
 
@@ -37,7 +40,8 @@ public class TankDrive extends CommandBase {
   @Override
   public void execute() {
     double throttle = (1.0 - throt.getAsDouble()) / -2.0;
-    driveSubsystem.drive(left.getAsDouble() * throttle, right.getAsDouble() * throttle);
+    driveSubsystem.drive(left.getAsDouble() * throttle * (reversed ? -1 : 1),
+        right.getAsDouble() * throttle * (reversed ? -1 : 1));
   }
 
   // Called once the command ends or is interrupted.

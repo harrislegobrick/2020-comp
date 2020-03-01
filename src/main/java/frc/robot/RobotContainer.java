@@ -56,7 +56,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    drivetrain.setDefaultCommand(new TankDrive(lJoy::getY, rJoy::getY, rJoy::getThrottle, drivetrain));
+    drivetrain.setDefaultCommand(new TankDrive(lJoy::getY, rJoy::getY, rJoy::getThrottle, false, drivetrain));
 
     configureButtonBindings();
   }
@@ -73,7 +73,8 @@ public class RobotContainer {
     new POVButton(lJoy, kJoySticks.POV_DOWN).whenPressed(limelight::setDriving, limelight);
 
     // intake and shooting on joystick triggers
-    new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, belts));
+    new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, belts)
+        .alongWith(new TankDrive(lJoy::getY, rJoy::getY, rJoy::getThrottle, true, drivetrain)));
     new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
 
     // limelight auto adjust on left joystick button closest to driverstation on top
