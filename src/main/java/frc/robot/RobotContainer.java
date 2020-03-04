@@ -83,6 +83,8 @@ public class RobotContainer {
     new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(
         new InstantCommand(climb::deploy, climb).andThen(new WaitCommand(2)).andThen(climb::release, climb));
     new JoystickButton(rJoy, 6).whileHeld(climb::run, climb).whenInactive(climb::stop, climb);
+    new JoystickButton(rJoy, 12).whileHeld(climb::unwind, climb).whenInactive(climb::stop, climb);
+  
 
     // return to shooting position (I have no idea if this will work, uncomment
     // later once everything else is tested)
@@ -163,7 +165,10 @@ public class RobotContainer {
     return new InstantCommand(limelight::setTracking, limelight)
         .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5))
         .andThen(limelight::setDriving, limelight).andThen(goToTrench)
-        .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts))).andThen(returnToShoot)
+        .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
+        .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts)))
+        .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain).andThen(returnToShoot)
+        .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
         .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5));
   }
 
