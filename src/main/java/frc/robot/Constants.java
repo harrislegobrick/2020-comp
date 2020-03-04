@@ -81,9 +81,9 @@ public final class Constants {
     }
 
     public static final class kLimelight {
-        public static final double a1 = 0; // mounting angle
-        public static final double h1 = 0; // height of your camera above the floor (in feet)
-        public static final double h2 = 6.77083; // height of the target (in feet)
+        public static final double a1 = 21.0; // mounting angle
+        public static final double h1 = 2.125; // height of your camera above the floor (in feet)
+        public static final double h2 = 7.0; // height of the target (in feet)
     }
 
     public static final class kTurn {
@@ -128,7 +128,7 @@ public final class Constants {
         public static final boolean INVERTED = false;
         // (1 / CPR) * (gear ratio) * (circumfrence in inches) * (inch to feet)
         public static final double CONVERSION_FACTOR = (1 / 42) * (10 / 1) * (Math.PI * 2) * (1 / 12);
-        public static final int[] FWD_REV_EXTENDOR = { 2, 3 };
+        public static final int[] FWD_REV_EXTENDOR = { 3, 2 };
         public static final int[] FWD_REV_RELEASE = { 4, 5 };
     }
 
