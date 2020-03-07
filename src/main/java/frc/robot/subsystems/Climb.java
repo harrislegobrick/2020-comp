@@ -58,12 +58,12 @@ public class Climb extends SubsystemBase {
 
   public void run() {
     if (extendor.get() == Value.kForward && release.get() == Value.kReverse) {
-      motor.set(0.35);
+      motor.set(-0.35);
     }
   }
 
   public void unwind() {
-    motor.set(-1);
+    motor.set(1.00);
   }
 
   public void stop() {

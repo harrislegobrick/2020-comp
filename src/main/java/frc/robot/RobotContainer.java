@@ -74,17 +74,17 @@ public class RobotContainer {
 
     // intake and shooting on joystick triggers
     new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, belts));
-    new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
+    new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, belts));
 
     // limelight auto adjust on left joystick button closest to driverstation on top
-    new JoystickButton(lJoy, 4).whenHeld(new LimelightTurnToAngleCommand(drivetrain, limelight));
+    new JoystickButton(lJoy, 2).whenHeld(new LimelightTurnToAngleCommand(drivetrain, limelight));
 
     // climbing on far top buttons for left and right and right middle bottom button
     new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(
         new InstantCommand(climb::deploy, climb).andThen(new WaitCommand(2)).andThen(climb::release, climb));
     new JoystickButton(rJoy, 6).whileHeld(climb::run, climb).whenInactive(climb::stop, climb);
+    new JoystickButton(lJoy, 4).whenPressed(climb::retract, climb);
     new JoystickButton(rJoy, 12).whileHeld(climb::unwind, climb).whenInactive(climb::stop, climb);
-  
 
     // return to shooting position (I have no idea if this will work, uncomment
     // later once everything else is tested)
@@ -115,7 +115,7 @@ public class RobotContainer {
       RamseteCommand trenchRun = new MakeRamseteCommand(runTrenchTrajectory, drivetrain);
 
       return new InstantCommand(limelight::setTracking, limelight)
-          .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
+          .andThen(new ShootCommand(flywheel, belts).withTimeout(3))
           .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench).andThen(
               trenchRun.raceWith(new DeployIntakeCommand(intake, belts)).andThen(() -> drivetrain.driveVolts(0, 0)));
     } catch (IOException ex) {
@@ -163,13 +163,12 @@ public class RobotContainer {
     RamseteCommand returnToShoot = new MakeRamseteCommand(returnTrajectory, drivetrain);
 
     return new InstantCommand(limelight::setTracking, limelight)
-        .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5))
-        .andThen(limelight::setDriving, limelight).andThen(goToTrench)
-        .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
+        .andThen(new ShootCommand(3, flywheel, belts).withTimeout(5)).andThen(limelight::setDriving, limelight)
+        .andThen(goToTrench).andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
         .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts)))
         .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain).andThen(returnToShoot)
         .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
-        .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5));
+        .andThen(new ShootCommand(3, flywheel, belts).withTimeout(5));
   }
 
   /**
@@ -179,7 +178,7 @@ public class RobotContainer {
    */
   public Command getFivePointer() {
     double speed = 0.3;
-    return new PIDCommand(new PIDController(0.1, 0, 0), drivetrain::getHeading, 0.0,
-        (output) -> drivetrain.drive(speed - output, speed + output), drivetrain).withTimeout(2);
+    return new PIDCommand(new PIDController(0.01, 0, 0), drivetrain::getHeading, 0.0,
+        (output) -> drivetrain.drive(speed - output, speed + output), drivetrain).withTimeout(1.5);
   }
 }
