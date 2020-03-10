@@ -7,12 +7,8 @@
 
 package frc.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -21,17 +17,15 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import frc.robot.Constants.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.Constants.*;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -74,17 +68,15 @@ public class RobotContainer {
 
     // intake and shooting on joystick triggers
     new JoystickButton(lJoy, 1).whenHeld(new DeployIntakeCommand(intake, belts));
-    new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, limelight, belts));
+    new JoystickButton(rJoy, 1).whenHeld(new ShootCommand(flywheel, belts));
 
     // limelight auto adjust on left joystick button closest to driverstation on top
-    new JoystickButton(lJoy, 4).whenHeld(new LimelightTurnToAngleCommand(drivetrain, limelight));
+    new JoystickButton(lJoy, 2).whenHeld(new LimelightTurnToAngleCommand(drivetrain, limelight));
 
     // climbing on far top buttons for left and right and right middle bottom button
-    new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(
-        new InstantCommand(climb::deploy, climb).andThen(new WaitCommand(2)).andThen(climb::release, climb));
-    new JoystickButton(rJoy, 6).whileHeld(climb::run, climb).whenInactive(climb::stop, climb);
+    new JoystickButton(lJoy, 3).and(new JoystickButton(rJoy, 4)).whenActive(climb::deploy, climb);
+    new JoystickButton(rJoy, 4).whileHeld(climb::run, climb).whenInactive(climb::stop, climb);
     new JoystickButton(rJoy, 12).whileHeld(climb::unwind, climb).whenInactive(climb::stop, climb);
-  
 
     // return to shooting position (I have no idea if this will work, uncomment
     // later once everything else is tested)
@@ -95,53 +87,6 @@ public class RobotContainer {
      * .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain).schedule()))
      * .whenInactive(() -> drivetrain.driveVolts(0, 0), drivetrain);
      */
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonOne() {
-    String goToTrenchJSON = "paths/GoToTrench.wpilib.json";
-    String runTrenchJSON = "paths/RunTrench.wpilib.json";
-    try {
-      Path goToTrenchPath = Filesystem.getDeployDirectory().toPath().resolve(goToTrenchJSON);
-      Path runTrenchPath = Filesystem.getDeployDirectory().toPath().resolve(runTrenchJSON);
-
-      Trajectory goToTrenchTrajectory = TrajectoryUtil.fromPathweaverJson(goToTrenchPath);
-      Trajectory runTrenchTrajectory = TrajectoryUtil.fromPathweaverJson(runTrenchPath);
-      RamseteCommand goToTrench = new MakeRamseteCommand(goToTrenchTrajectory, drivetrain);
-      RamseteCommand trenchRun = new MakeRamseteCommand(runTrenchTrajectory, drivetrain);
-
-      return new InstantCommand(limelight::setTracking, limelight)
-          .andThen(new ShootCommand(flywheel, limelight, belts).withTimeout(3))
-          .andThen(new InstantCommand(limelight::setDriving, limelight)).andThen(goToTrench).andThen(
-              trenchRun.raceWith(new DeployIntakeCommand(intake, belts)).andThen(() -> drivetrain.driveVolts(0, 0)));
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectorys: " + goToTrenchJSON + " " + runTrenchJSON,
-          ex.getStackTrace());
-    }
-    return null;
-  }
-
-  /**
-   * Just <b>drives</b> straight
-   * 
-   * @return : the command to drive straight
-   */
-  public Command getTestCommand() {
-    String trajectoryJSON = "paths/GoToTrench.wpilib.json";
-    try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      RamseteCommand pathOne = new MakeRamseteCommand(
-          trajectory.transformBy(drivetrain.getPose().minus(trajectory.getInitialPose())), drivetrain);
-      return pathOne.andThen(() -> drivetrain.driveVolts(0, 0));
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-    }
-    return null;
   }
 
   public Command getSixBallAutoCommand() {
@@ -163,13 +108,12 @@ public class RobotContainer {
     RamseteCommand returnToShoot = new MakeRamseteCommand(returnTrajectory, drivetrain);
 
     return new InstantCommand(limelight::setTracking, limelight)
-        .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5))
-        .andThen(limelight::setDriving, limelight).andThen(goToTrench)
-        .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
+        .andThen(new ShootCommand(3, flywheel, belts).withTimeout(5)).andThen(limelight::setDriving, limelight)
+        .andThen(goToTrench).andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
         .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts)))
         .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain).andThen(returnToShoot)
         .andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
-        .andThen(new ShootCommand(3, flywheel, limelight, belts).withTimeout(5));
+        .andThen(new ShootCommand(3, flywheel, belts).withTimeout(5));
   }
 
   /**
@@ -179,7 +123,8 @@ public class RobotContainer {
    */
   public Command getFivePointer() {
     double speed = 0.3;
-    return new PIDCommand(new PIDController(0.1, 0, 0), drivetrain::getHeading, 0.0,
-        (output) -> drivetrain.drive(speed - output, speed + output), drivetrain).withTimeout(2);
+    return new InstantCommand(drivetrain::resetGyro)
+        .andThen(new PIDCommand(new PIDController(0.01, 0, 0), drivetrain::getHeading, 0.0,
+            (output) -> drivetrain.drive(speed - output, speed + output), drivetrain).withTimeout(2));
   }
 }

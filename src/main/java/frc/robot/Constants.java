@@ -110,7 +110,7 @@ public final class Constants {
         public static final int MOTOR = 5;
         public static final boolean INVERTED = true;
 
-        public static final int[] FWD_REV_SOLINOID = { 0, 1 };
+        public static final int[] FWD_REV_SOLINOID = { 1, 0 };
     }
 
     public static final class kColorWheel {
@@ -125,11 +125,10 @@ public final class Constants {
 
     public static final class kClimb {
         public static final int MOTOR = 8;
-        public static final boolean INVERTED = false;
+        public static final boolean INVERTED = true;
         // (1 / CPR) * (gear ratio) * (circumfrence in inches) * (inch to feet)
         public static final double CONVERSION_FACTOR = (1 / 42) * (10 / 1) * (Math.PI * 2) * (1 / 12);
         public static final int[] FWD_REV_EXTENDOR = { 3, 2 };
-        public static final int[] FWD_REV_RELEASE = { 4, 5 };
     }
 
     public static final class kFieldPositions {

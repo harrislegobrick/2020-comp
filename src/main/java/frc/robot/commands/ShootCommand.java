@@ -13,11 +13,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kFlywheel;
 import frc.robot.subsystems.Belts;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Limelight;
 
 public class ShootCommand extends CommandBase {
   private final Flywheel flywheel;
-  private final Limelight limelight;
   private final Belts belts;
   private double delay = 0.5;
   private double initTime;
@@ -31,8 +29,8 @@ public class ShootCommand extends CommandBase {
    * @param limelight limelight
    * @param belts     belts
    */
-  public ShootCommand(Flywheel flywheel, Limelight limelight, Belts belts) {
-    this(-10, flywheel, limelight, belts);
+  public ShootCommand(Flywheel flywheel, Belts belts) {
+    this(-10, flywheel, belts);
   }
 
   /**
@@ -43,9 +41,8 @@ public class ShootCommand extends CommandBase {
    * @param limelight         limelight
    * @param belts             belts
    */
-  public ShootCommand(int powerCellsToShoot, Flywheel flywheel, Limelight limelight, Belts belts) {
+  public ShootCommand(int powerCellsToShoot, Flywheel flywheel, Belts belts) {
     this.flywheel = flywheel;
-    this.limelight = limelight;
     this.belts = belts;
     this.powerCellsToShoot = powerCellsToShoot;
     addRequirements(flywheel, belts);
@@ -62,8 +59,7 @@ public class ShootCommand extends CommandBase {
   @Override
   public void execute() {
     // 4000 / 15 = 267 so multiply distance by 267 to get RPM?
-    double distance = limelight.getDistance();
-    double velocity = Double.isNaN(distance) ? kFlywheel.RPM : 267 * distance;
+    double velocity = kFlywheel.RPM;
 
     if (getFPGATimestamp() > (initTime + (delay / 4))) {
       flywheel.setVelocity(velocity);

@@ -19,7 +19,6 @@ import frc.robot.Constants.kClimb;
 public class Climb extends SubsystemBase {
   private final CANSparkMax motor;
   private final DoubleSolenoid extendor;
-  private final DoubleSolenoid release;
 
   /**
    * Creates a new Climb.
@@ -27,7 +26,6 @@ public class Climb extends SubsystemBase {
   public Climb() {
     motor = new CANSparkMax(kClimb.MOTOR, MotorType.kBrushless);
     extendor = new DoubleSolenoid(kClimb.FWD_REV_EXTENDOR[0], kClimb.FWD_REV_EXTENDOR[1]);
-    release = new DoubleSolenoid(kClimb.FWD_REV_RELEASE[0], kClimb.FWD_REV_RELEASE[1]);
 
     motor.restoreFactoryDefaults();
     motor.setMotorType(MotorType.kBrushless);
@@ -35,21 +33,10 @@ public class Climb extends SubsystemBase {
     motor.setInverted(kClimb.INVERTED);
 
     retract();
-    hold();
   }
 
   public void deploy() {
     extendor.set(Value.kForward);
-  }
-
-  public void release() {
-    if (extendor.get() == Value.kForward) {
-      release.set(Value.kReverse);
-    }
-  }
-
-  public void hold() {
-    release.set(Value.kForward);
   }
 
   public void retract() {
@@ -57,13 +44,13 @@ public class Climb extends SubsystemBase {
   }
 
   public void run() {
-    if (extendor.get() == Value.kForward && release.get() == Value.kReverse) {
-      motor.set(0.35);
+    if (extendor.get() == Value.kForward) {
+      motor.set(-0.35);
     }
   }
 
   public void unwind() {
-    motor.set(-1);
+    motor.set(1.00);
   }
 
   public void stop() {
