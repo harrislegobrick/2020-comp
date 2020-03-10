@@ -129,7 +129,6 @@ public final class Constants {
         // (1 / CPR) * (gear ratio) * (circumfrence in inches) * (inch to feet)
         public static final double CONVERSION_FACTOR = (1 / 42) * (10 / 1) * (Math.PI * 2) * (1 / 12);
         public static final int[] FWD_REV_EXTENDOR = { 3, 2 };
-        public static final int[] FWD_REV_RELEASE = { 5, 4 };
     }
 
     public static final class kFieldPositions {
