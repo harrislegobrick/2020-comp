@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
 
-  private SendableChooser<Command> chooser = new SendableChooser<>();
+  private SendableChooser<Command> chooser = new SendableChooser<Command>();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -33,15 +33,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-    chooser.setDefaultOption("Default Auto", robotContainer.getFivePointer());
+    chooser.setDefaultOption("Move off line", robotContainer.getFivePointer());
     chooser.addOption("Six Baller", robotContainer.getSixBallAutoCommand());
-    chooser.addOption("Move off line", robotContainer.getFivePointer());
 
-    SmartDashboard.putData("Auto mode", chooser);
+    SmartDashboard.putData("Auto Mode", chooser);
   }
 
   /**
@@ -55,13 +51,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
@@ -84,7 +73,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     autonomousCommand = chooser.getSelected();
 
-    // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
@@ -99,10 +87,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
