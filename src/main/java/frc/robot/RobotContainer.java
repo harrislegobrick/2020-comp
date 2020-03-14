@@ -93,8 +93,6 @@ public class RobotContainer {
     TrajectoryConfig reversedConfig = kDrivetrain.CONFIG;
     reversedConfig.setReversed(true);
 
-    drivetrain.setPosition(kFieldPositions.SHOOTING_POS);
-
     Trajectory goToTrenchTrajectory = TrajectoryGenerator.generateTrajectory(kFieldPositions.SHOOTING_POS, List.of(),
         kFieldPositions.TRENCH_RUNUP, reversedConfig);
     RamseteCommand goToTrench = new MakeRamseteCommand(goToTrenchTrajectory, drivetrain);
@@ -107,7 +105,8 @@ public class RobotContainer {
         kFieldPositions.SHOOTING_POS, kDrivetrain.CONFIG);
     RamseteCommand returnToShoot = new MakeRamseteCommand(returnTrajectory, drivetrain);
 
-    return new InstantCommand(limelight::setTracking, limelight)
+    return new InstantCommand(() -> drivetrain.setPosition(kFieldPositions.SHOOTING_POS), drivetrain)
+        .andThen(new InstantCommand(limelight::setTracking, limelight))
         .andThen(new ShootCommand(3, flywheel, belts).withTimeout(5)).andThen(limelight::setDriving, limelight)
         .andThen(goToTrench).andThen(() -> drivetrain.driveVolts(0, 0), drivetrain)
         .andThen(runTrench.raceWith(new DeployIntakeCommand(intake, belts)))
